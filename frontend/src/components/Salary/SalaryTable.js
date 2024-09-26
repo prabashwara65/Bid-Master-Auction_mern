@@ -1,46 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { jsPDF } from 'jspdf'; // Import jsPDF
+import { jsPDF } from 'jspdf'; 
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import '@fortawesome/fontawesome-free/css/all.min.css'; 
-import Nav from '../Nav';
+import Nav from '../Nav'; // Assuming Nav component is already present
+import { Link } from 'react-router-dom';
 
 const URL = "http://localhost:8070/employee"; // Employee API URL
-
-const SalaryRow = ({ employee, salary, onDeleteSalary, onGenerateReport }) => {
-  return (
-    <tr>
-      <td>{employee.fullName}</td>
-      <td>{employee.email}</td>
-      <td>{employee.jobTitle}</td>
-      <td className="text-end">{salary ? salary.TotalSalary.toFixed(2) : 'N/A'}</td>
-      <td className="text-center">
-        <div className="d-flex justify-content-center">
-          <Link
-            to={`/addsalary/${employee._id}`}
-            className={`btn btn-primary btn-sm me-2 ${salary ? 'disabled' : ''}`}
-          >
-            Add Salary
-          </Link>
-          <Link to={`/updatesalary/${employee._id}`} className="btn btn-secondary btn-sm me-2">
-            Update Salary
-          </Link>
-          {salary && (
-            <button onClick={() => onDeleteSalary(employee._id)} className="btn btn-sm me-2">
-              <i className="fas fa-trash" style={{ color: 'red' }}></i>
-            </button>
-          )}
-          {salary && (
-            <button onClick={() => onGenerateReport(employee, salary)} className="btn btn-sm btn-info">
-              <i className="fas fa-download"></i> {/* Download icon */}
-            </button>
-          )}
-        </div>
-      </td>
-    </tr>
-  );
-};
 
 const fetchHandler = async () => {
   return await axios.get(URL).then((res) => res.data);
@@ -94,26 +60,21 @@ function SalaryTable() {
 
   const handleGenerateReport = (employee, salary) => {
     const doc = new jsPDF();
-
     doc.setFontSize(18);
     doc.text('Salary Report', 14, 22);
-    
     doc.setFontSize(12);
     doc.text(`Full Name: ${employee.fullName}`, 14, 40);
     doc.text(`Email: ${employee.email}`, 14, 50);
     doc.text(`Job Title: ${employee.jobTitle}`, 14, 60);
-
-    // Add detailed salary information
     if (salary) {
-      doc.text(`Basic Salary: ${salary.BasicSalary.toFixed(2)}`, 14, 90);
-      doc.text(`Bonus: ${salary.Bonus.toFixed(2)}`, 14, 100);
+      doc.text(`Basic Salary: Rs. ${salary.BasicSalary.toFixed(2)}`, 14, 90);
+      doc.text(`Bonus: Rs. ${salary.Bonus.toFixed(2)}`, 14, 100);
       doc.text(`OT Hours: ${salary.OTHours}`, 14, 110);
-      doc.text(`OT Rate: ${salary.OTRate.toFixed(2)}`, 14, 120);
-      doc.text(`Total Salary: ${salary.TotalSalary.toFixed(2)}`, 14, 130);
+      doc.text(`OT Rate: Rs. ${salary.OTRate.toFixed(2)}`, 14, 120);
+      doc.text(`Total Salary: Rs. ${salary.TotalSalary.toFixed(2)}`, 14, 130);
     } else {
       doc.text(`Total Salary: N/A`, 14, 90);
     }
-
     doc.save(`${employee.fullName}_Salary_Report.pdf`);
   };
 
@@ -124,9 +85,9 @@ function SalaryTable() {
 
   return (
     <>
-      <Nav />
+      <Nav /> {/* Assuming a Nav component exists */}
       <div className="container mt-5">
-        <h1>Salary Table</h1>
+        <h1>Employee Salaries</h1>
         <input
           type="text"
           className="form-control mb-3"
@@ -134,29 +95,58 @@ function SalaryTable() {
           value={searchTerm}
           onChange={handleSearch}
         />
-        <div className="table-responsive">
-          <table className="table table-striped table-bordered">
-            <thead className="thead-dark">
-              <tr>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Job Title</th>
-                <th>Total Salary (Rs.)</th>
-                <th className="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredEmployees.map((employee) => (
-                <SalaryRow
-                  key={employee._id}
-                  employee={employee}
-                  salary={salaries[employee._id]}
-                  onDeleteSalary={handleDeleteSalary}
-                  onGenerateReport={handleGenerateReport}
-                />
-              ))}
-            </tbody>
-          </table>
+        <div className="row">
+          {filteredEmployees.map((employee) => (
+            <div className="col-md-6" key={employee._id}>
+              {/* Card with Avatar, Salary Information, and Actions */}
+              <div className="card mb-3 shadow-sm">
+                <div className="row g-0">
+                  {/* Avatar on the left side */}
+                  <div className="col-md-3 d-flex align-items-center justify-content-center">
+                    {/* Using robohash for random avatars */}
+                    <img
+                      src={`https://robohash.org/${employee.email}.png?size=100x100`}
+                      className="img-fluid rounded-circle"
+                      alt="Profile Icon"
+                    />
+                  </div>
+                  <div className="col-md-5">
+                    <div className="card-body">
+                      <h5 className="card-title">{employee.fullName}</h5>
+                      <p className="card-text"><strong>Email:</strong> {employee.email}</p>
+                      <p className="card-text"><strong>Job Title:</strong> {employee.jobTitle}</p>
+                      <p className="card-text">
+                        <strong>Total Salary:</strong> {salaries[employee._id] ? `Rs. ${salaries[employee._id].TotalSalary.toFixed(2)}` : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-4 d-flex align-items-center justify-content-center">
+                    <div className="btn-group">
+                      <Link
+                        to={`/addsalary/${employee._id}`}
+                        className={`btn btn-outline-primary btn-sm me-2 ${salaries[employee._id] ? 'disabled' : ''}`}
+                      >
+                        <i className="fas fa-plus-circle"></i> Add Salary
+                      </Link>
+                      <Link to={`/updatesalary/${employee._id}`} className="btn btn-outline-secondary btn-sm me-2">
+                        <i className="fas fa-edit"></i> Update
+                      </Link>
+                      {salaries[employee._id] && (
+                        <>
+                          <button onClick={() => handleDeleteSalary(employee._id)} className="btn btn-outline-danger btn-sm me-2">
+                            <i className="fas fa-trash"></i>
+                          </button>
+                          <button onClick={() => handleGenerateReport(employee, salaries[employee._id])} className="btn btn-outline-info btn-sm">
+                            <i className="fas fa-download"></i> Download Report
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </>
