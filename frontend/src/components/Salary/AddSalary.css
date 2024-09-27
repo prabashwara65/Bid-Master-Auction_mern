@@ -1,0 +1,40 @@
+.custom-card {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .custom-form .input-group-text {
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 10px 0 0 10px;
+  }
+  
+  .custom-form .form-control {
+    border-radius: 0 10px 10px 0;
+    border: none;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-form input::placeholder {
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  
+  .custom-card .card-header {
+    border-bottom: none;
+  }
+  
+  .custom-card .card-body {
+    padding: 2rem;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border: none;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
+  }
+  
