@@ -1,53 +1,55 @@
 import React from 'react';
-import NavigationCard from './components/naviagteLinks'; // Adjust the path as necessary
-import BlankCard from './components/blackCard'; // Adjust the path as necessary
+import 'bootstrap/dist/css/bootstrap.min.css';
+import NavigationCard from './components/NavigationCard'; // Adjust path if needed
+import SalaryDetails from './components/SalaryDetails'; // Adjust path if needed
 import StackedChart from './components/StackedChart';
+import PieChart from './components/PieChart'
+import { BarChart } from 'recharts';
 
-// Main App component
-const App = () => {
+const Dashboard = () => {
+  // Sample user data for UserDetails
+  const user = {
+    name: 'Alice',
+    basicSalary: 50000,
+    bonus: 5000,
+    otHours: 10,
+    otRate: 25,
+  };
+
   return (
-    <div style={mainContainerStyle}>
-      
-      {/* NavigationCard on top-left */}
-      <div style={topLeftContainer}>
-        <NavigationCard />
-      </div>
-      
-      {/* Blank cards in a container on top-right */}
-      <div style={topRightContainer}>
-        <BlankCard />
-      </div>
+    <div className="container-fluid p-4">
+      <div className="row">
+        {/* Left column: NavigationCard and UserDetails */}
+        <div className="col-md-3">
+          {/* NavigationCard */}
+          <NavigationCard />          
+        </div>
+        
+        {/* Right column: SalaryDetails content */}
+        <div className="col-md-9">
+          <div className="card my-4">
+            <SalaryDetails user={user} />
+            {/* Add your other components or content here */}
+          </div>
+        </div>
 
-      {/* StackedChart  */}
-      <div>
-        <StackedChart />
-      </div>
 
+        <div className="col-md-8">
+          <div className="card my-2 h-15 ">
+            <StackedChart />
+            {/* Add your other components or content here */}
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card my-2 h-15 ">
+            <PieChart data={user} />
+            {/* Add your other components or content here */}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-// Styles for the main container that wraps both sections
-const mainContainerStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  padding: '20px',
-};
-
-// Styles for the top-left (NavigationCard)
-const topLeftContainer = {
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-};
-
-// Styles for the top-right (BlankCards)
-const topRightContainer = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'flex-start',
-  marginLeft: 'auto', // Pushes this section to the right
-};
-
-export default App;
+export default Dashboard;
