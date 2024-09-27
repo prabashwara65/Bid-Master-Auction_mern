@@ -110,17 +110,17 @@ function SalaryTable() {
                       alt="Profile Icon"
                     />
                   </div>
-                  <div className="col-md-5">
-                    <div className="card-body">
-                      <h5 className="card-title">{employee.fullName}</h5>
-                      <p className="card-text"><strong>Email:</strong> {employee.email}</p>
-                      <p className="card-text"><strong>Job Title:</strong> {employee.jobTitle}</p>
-                      <p className="card-text">
+                  <div className="col-md-9">
+                    <div className="card-body d-flex flex-column justify-content-center">
+                      <h5 className="card-title mb-1 text-start">{employee.fullName}</h5>
+                      <p className="card-text mb-1 text-start"><strong>Email:</strong> {employee.email}</p>
+                      <p className="card-text mb-1 text-start"><strong>Job Title:</strong> {employee.jobTitle}</p>
+                      <p className="card-text mb-1 text-start">
                         <strong>Total Salary:</strong> {salaries[employee._id] ? `Rs. ${salaries[employee._id].TotalSalary.toFixed(2)}` : 'N/A'}
                       </p>
                     </div>
                   </div>
-                  <div className="col-md-4 d-flex align-items-center justify-content-center">
+                  <div className="col-md-12 d-flex justify-content-end align-items-center p-3">
                     <div className="btn-group">
                       <Link
                         to={`/addsalary/${employee._id}`}
