@@ -1,49 +1,38 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 
-const CardWithLinks = () => {
+// Card component to display user information
+const BlankCard = ({ title, content }) => {
   return (
-    <div style={cardStyle}>
-      <div style={linkContainerStyle}>
-        <a href="/addsalary" style={linkStyle}>Add Salary</a>
-        <a href="/updatesalary" style={linkStyle}>Update Salary</a>
-        <a href="/viewreport" style={linkStyle}>View Report</a>
+    <div className="card" style={{ width: '150px', margin: '5px' }}>
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">{content}</p>
       </div>
     </div>
   );
 };
 
-// Styles
-const cardStyle = {
-  padding: '20px',
-  border: '1px solid #ccc',
-  borderRadius: '8px',
-  width: '300px', // Adjust width as needed
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  textAlign: 'center',
-  margin: '20px auto', // Center card on the page
+// Main App component
+const App = () => {
+  // Sample user data
+  const user = {
+    name: 'Alice',
+    basicSalary: 50000,
+    bonus: 5000,
+    otHours: 10,
+    otRate: 25,
+  };
+
+  return (
+    <div className="d-flex flex-wrap justify-content-center" style={{ margin: '20px 0' }}>
+      <BlankCard title="User Name" content={user.name} />
+      <BlankCard title="Basic Salary" content={`$${user.basicSalary}`} />
+      <BlankCard title="Bonus" content={`$${user.bonus}`} />
+      <BlankCard title="OT Hours" content={`${user.otHours} hrs`} />
+      <BlankCard title="OT Rate" content={`$${user.otRate}/hr`} />
+    </div>
+  );
 };
 
-const headerStyle = {
-  marginBottom: '15px',
-};
-
-const linkContainerStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '10px', // Space between links
-};
-
-const linkStyle = {
-  textDecoration: 'none',
-  color: '#0070f3', // Link color
-  fontSize: '18px',
-  padding: '10px',
-  borderRadius: '4px',
-  transition: 'background-color 0.3s',
-};
-
-const linkHoverStyle = {
-  backgroundColor: '#f0f0f0',
-};
-
-export default CardWithLinks;
+export default App;

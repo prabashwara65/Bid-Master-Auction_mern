@@ -19,6 +19,27 @@ const data = [
     OT_Hours: 200,
     OT_Rate: 25,
   },
+  {
+    name: 'User 1',
+    BasicSalary: 4000,
+    Bonus: 100,
+    OT_Hours: 800,
+    OT_Rate: 25,
+  },
+  {
+    name: 'User 1',
+    BasicSalary: 9000,
+    Bonus: 1000,
+    OT_Hours: 200,
+    OT_Rate: 25,
+  },
+  {
+    name: 'User 1',
+    BasicSalary: 4000,
+    Bonus: 1000,
+    OT_Hours: 20,
+    OT_Rate: 25,
+  },
 ];
 
 const StackedChart = () => {

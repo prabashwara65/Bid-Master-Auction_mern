@@ -1,53 +1,38 @@
 import React from 'react';
-import NavigationCard from './components/naviagteLinks'; // Adjust the path as necessary
-import BlankCard from './components/blackCard'; // Adjust the path as necessary
-import StackedChart from './components/StackedChart';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 
-// Main App component
-const App = () => {
+// Card component to display user information
+const BlankCard = ({ title, content }) => {
   return (
-    <div style={mainContainerStyle}>
-      
-      {/* NavigationCard on top-left */}
-      <div style={topLeftContainer}>
-        <NavigationCard />
+    <div className="card" style={{ width: '150px', margin: '5px' }}>
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">{content}</p>
       </div>
-      
-      {/* Blank cards in a container on top-right */}
-      <div style={topRightContainer}>
-        <BlankCard />
-      </div>
-
-      {/* StackedChart  */}
-      <div>
-        <StackedChart />
-      </div>
-
     </div>
   );
 };
 
-// Styles for the main container that wraps both sections
-const mainContainerStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-start',
-  padding: '20px',
-};
+// Main App component
+const App = () => {
+  // Sample user data
+  const user = {
+    name: 'Alice',
+    basicSalary: 50000,
+    bonus: 5000,
+    otHours: 10,
+    otRate: 25,
+  };
 
-// Styles for the top-left (NavigationCard)
-const topLeftContainer = {
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',
-};
-
-// Styles for the top-right (BlankCards)
-const topRightContainer = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'flex-start',
-  marginLeft: 'auto', // Pushes this section to the right
+  return (
+    <div className="d-flex flex-wrap justify-content-center" style={{ margin: '20px 0' }}>
+      <BlankCard title="User Name" content={user.name} />
+      <BlankCard title="Basic Salary" content={`$${user.basicSalary}`} />
+      <BlankCard title="Bonus" content={`$${user.bonus}`} />
+      <BlankCard title="OT Hours" content={`${user.otHours} hrs`} />
+      <BlankCard title="OT Rate" content={`$${user.otRate}/hr`} />
+    </div>
+  );
 };
 
 export default App;
