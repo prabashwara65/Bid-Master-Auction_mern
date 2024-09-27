@@ -18,7 +18,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container-fluid p-5">
+    <div className="container-fluid p-5 ">
       <div className="row">
         {/* Left column: NavigationCard and UserDetails */}
         <div className="col-md-3">
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
         {/* Right column: SalaryDetails content */}
         <div className="col-md-9">
-          <div className="card my-4" >
+          <div className="card mb-2" >
             <SalaryDetails user={user} />
           </div>
         </div>
@@ -46,13 +46,13 @@ const Dashboard = () => {
         </div>
 
         <div className="col-md-3">
-          <div className="card my-4 ">
+          <div className="card my-2 ">
             <CategorizeEmployees /> 
             </div>
         </div>
 
         <div className="col-md-9">
-          <div className="card my-4 ">
+          <div className="card my-2 ">
             <EmpTable />
           </div>
         </div>

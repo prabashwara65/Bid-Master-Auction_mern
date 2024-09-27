@@ -1,13 +1,14 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 
 // Card component to display individual user details
 const DetailCard = ({ title, value }) => {
   return (
-    <div className="card text-center" style={{ width: '170px', margin: '5px', height: '100px' }}>
-      <div className="card-body d-flex justify-content-center align-items-center" style={{ flexDirection: 'column' }}>
-        <h5 className="card-title" style={{ display: 'inline' }}>{title}</h5>
-        <span className="card-text" style={{ display: 'inline', marginLeft: '5px' }}>{value}</span>
+    <div className="card text-start border border-dark" style={{ width: '170px', margin: '5px', height: '100px' }}>
+      <div className="card-body d-flex justify-content-start align-items-left" style={{ flexDirection: 'column' }}>
+        <h5 className="card-title" style={{ margin: '0' }}>{title}</h5>
+        <span className="card-text">{value}</span>
       </div>
     </div>
   );
@@ -15,23 +16,59 @@ const DetailCard = ({ title, value }) => {
 
 // Main App component
 const App = () => {
-  // Sample user data
-  const users = [
-    { name: 'Alice', basicSalary: 50000, bonus: 5000, otHours: 10, otRate: 25 },
-    // Add more users if needed
-  ];
+  const [employees, setEmployees] = useState([]); // State for user list
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(''); // State for selected employee ID
+  const [employeeDetails, setEmployeeDetails] = useState({}); // State for selected employee's details
+
+  // Fetch employee list from API
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get("http://localhost:8070/employee");
+        setEmployees(response.data.employees); // Assume the response contains an array of employees
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+    fetchEmployees();
+  }, []);
+
+  // Fetch details for the selected employee
+  useEffect(() => {
+    const fetchEmployeeDetails = async () => {
+      if (selectedEmployeeId) {
+        try {
+          const response = await axios.get(`http://localhost:8070/salaries/get/${selectedEmployeeId}`);
+          setEmployeeDetails(response.data.salary); // Assume the response contains user details
+        } catch (error) {
+          console.error('Error fetching employee details:', error);
+        }
+      } else {
+        setEmployeeDetails({}); // Reset details if no employee is selected
+      }
+    };
+    fetchEmployeeDetails();
+  }, [selectedEmployeeId]);
 
   return (
-    <div className="d-flex justify-content-center flex-wrap" style={{ margin: '10px 0', gap: '10px'}}>
-      {users.map((user, index) => (
-        <React.Fragment key={index}>
-          <DetailCard title="Name:" value={user.name} />
-          <DetailCard title="B-Salary:" value={`$${user.basicSalary}`} />
-          <DetailCard title="Bonus:" value={`$${user.bonus}`} />
-          <DetailCard title="OT Hours:" value={`${user.otHours} hrs`} />
-          <DetailCard title="OT Rate:" value={`$${user.otRate}/hr`} />
-        </React.Fragment>
-      ))}
+    <div className="d-flex flex-column align-items-center" style={{ margin: '10px 0' }}>
+      <div>
+        <select onChange={(e) => setSelectedEmployeeId(e.target.value)} className="form-select mb-3">
+          <option value="">Select Employee</option>
+          {employees.map((employee) => (
+            <option key={employee._id} value={employee._id}>{employee.fullName}</option> // Assuming each employee has an _id and fullName
+          ))}
+        </select>
+      </div>
+
+      {/* Flex row for detail cards */}
+      <div className="d-flex flex-row" style={{ gap: '10px' }}>
+        <DetailCard title="B-Salary:" value={`Rs:${employeeDetails.BasicSalary ? employeeDetails.BasicSalary.toFixed(2) : 'N/A'}`} />
+        <DetailCard title="Bonus:" value={`Rs:${employeeDetails.Bonus ? employeeDetails.Bonus.toFixed(2) : 'N/A'}`} />
+        <DetailCard title="OT Hours:" value={`${employeeDetails.OTHours || 'N/A'} hrs`} />
+        <DetailCard title="OT Rate:" value={`Rs:${employeeDetails.OTRate ? employeeDetails.OTRate.toFixed(2) : 'N/A'}/hr`} />
+        <DetailCard title="TotSalary:" value={`Rs:${employeeDetails.TotalSalary ? employeeDetails.TotalSalary.toFixed(2) : 'N/A'}`} />
+      </div>
     </div>
   );
 };

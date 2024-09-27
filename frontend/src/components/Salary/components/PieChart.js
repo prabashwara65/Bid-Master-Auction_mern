@@ -1,35 +1,33 @@
+// PieChart.js
 import React, { useEffect, useRef } from 'react';
 import { Chart, registerables } from 'chart.js';
 
-// Register the necessary components for Chart.js
+// Register Chart.js components
 Chart.register(...registerables);
 
-const PieChart = ({ data }) => {
-  const chartRef = useRef(null); // Create a ref for the chart instance
+const PieChart = ({ employeeName, data }) => {
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    // Get the context of the canvas element
     const ctx = chartRef.current.getContext('2d');
-
-    // Create the chart instance
     const chartInstance = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Basic Salary', 'Bonus', 'OT Pay', 'OT Rate'], // Labels for pie sections
+        labels: ['Basic Salary', 'Bonus', 'OT Pay', 'OT Rate'],
         datasets: [
           {
-            label: 'Salary Breakdown',
+            label: `Salary Breakdown for ${employeeName}`,
             data: [
               data.basicSalary,
               data.bonus,
               data.otHours * data.otRate, // Total OT Pay
-              data.otRate
+              data.otRate,
             ],
             backgroundColor: [
-              'rgba(75, 192, 192, 0.6)', // Basic Salary
-              'rgba(54, 162, 235, 0.6)', // Bonus
-              'rgba(255, 206, 86, 0.6)', // OT Pay
-              'rgba(153, 102, 255, 0.6)', // OT Rate
+              'rgba(75, 192, 192, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(255, 206, 86, 0.6)',
+              'rgba(153, 102, 255, 0.6)',
             ],
             borderColor: [
               'rgba(75, 192, 192, 1)',
@@ -49,25 +47,18 @@ const PieChart = ({ data }) => {
           },
           title: {
             display: true,
-            text: 'Salary Breakdown for ' + data.name,
+            text: `Salary Breakdown for ${employeeName}`,
           },
         },
       },
     });
 
-    // Cleanup function to destroy the chart instance
     return () => {
       chartInstance.destroy();
     };
-  }, [data]);
+  }, [data, employeeName]);
 
-  return (
-    <div className="card p-2 mb-4" style={{ width: '300px', height: '350px' }}> {/* Set specific width and height for the card */}
-      <div className="card-body p-0"> {/* Remove padding from the card body */}
-        <canvas ref={chartRef} /> {/* Set canvas size */}
-      </div>
-    </div>
-  );
+  return <canvas ref={chartRef} />;
 };
 
 export default PieChart;
