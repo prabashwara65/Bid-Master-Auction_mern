@@ -62,9 +62,9 @@ const PieChart = ({ data }) => {
   }, [data]);
 
   return (
-    <div className="card p-3 mb-4"> {/* Bootstrap card for styling */}
-      <div className="card-body">
-        <canvas ref={chartRef} style={{ height: '400px', width: '100%' }} />
+    <div className="card p-2 mb-4" style={{ width: '300px', height: '350px' }}> {/* Set specific width and height for the card */}
+      <div className="card-body p-0"> {/* Remove padding from the card body */}
+        <canvas ref={chartRef} /> {/* Set canvas size */}
       </div>
     </div>
   );

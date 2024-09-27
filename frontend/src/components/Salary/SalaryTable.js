@@ -18,7 +18,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-5">
       <div className="row">
         {/* Left column: NavigationCard and UserDetails */}
         <div className="col-md-3">
@@ -28,19 +28,19 @@ const Dashboard = () => {
 
         {/* Right column: SalaryDetails content */}
         <div className="col-md-9">
-          <div className="card my-4">
+          <div className="card my-4" >
             <SalaryDetails user={user} />
           </div>
         </div>
 
-        <div className="col-md-8">
-          <div className="card my-2 h-15 ">
+        <div className="col-md-9">
+          <div className="card my-2"style={{  height: '350px' }} >
             <StackedChart />
           </div>
         </div>
 
-        <div className="col-md-4">
-          <div className="card my-2 h-15 ">
+        <div className="col-md-3">
+          <div className="card my-2" style={{ width: '340px' , height: '350px'}}>
             <PieChart data={user} />
           </div>
         </div>
