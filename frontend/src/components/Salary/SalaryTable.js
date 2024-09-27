@@ -1,15 +1,16 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import NavigationCard from './components/NavigationCard'; // Adjust path if needed
-import SalaryDetails from './components/SalaryDetails'; // Adjust path if needed
-import StackedChart from './components/StackedChart';
-import PieChart from './components/PieChart'
-import { BarChart } from 'recharts';
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import NavigationCard from "./components/NavigationCard"; // Adjust path if needed
+import SalaryDetails from "./components/SalaryDetails"; // Adjust path if needed
+import StackedChart from "./components/StackedChart";
+import PieChart from "./components/PieChart";
+import EmpTable from "./components/EmpTable";
+import CategorizeEmployees from "./components/CategorizeEmp";
 
 const Dashboard = () => {
   // Sample user data for UserDetails
   const user = {
-    name: 'Alice',
+    name: "Alice",
     basicSalary: 50000,
     bonus: 5000,
     otHours: 10,
@@ -22,29 +23,37 @@ const Dashboard = () => {
         {/* Left column: NavigationCard and UserDetails */}
         <div className="col-md-3">
           {/* NavigationCard */}
-          <NavigationCard />          
+          <NavigationCard />
         </div>
-        
+
         {/* Right column: SalaryDetails content */}
         <div className="col-md-9">
           <div className="card my-4">
             <SalaryDetails user={user} />
-            {/* Add your other components or content here */}
           </div>
         </div>
-
 
         <div className="col-md-8">
           <div className="card my-2 h-15 ">
             <StackedChart />
-            {/* Add your other components or content here */}
           </div>
         </div>
 
         <div className="col-md-4">
           <div className="card my-2 h-15 ">
             <PieChart data={user} />
-            {/* Add your other components or content here */}
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <div className="card my-4 ">
+            <CategorizeEmployees /> 
+            </div>
+        </div>
+
+        <div className="col-md-9">
+          <div className="card my-4 ">
+            <EmpTable />
           </div>
         </div>
       </div>
