@@ -4,6 +4,8 @@ import NavigationCard from "../Salary/components/SalaryTable/NavigationCard"; //
 import SalaryDetails from "../Salary/components/SalaryTable/SalaryDetails"; // Adjust path if needed
 import IncomesCash from './components/IncomeCash'
 import OutgoingCash from './components/OutgoingCash'
+import LineChartCast from './components/LineChartCash'
+import CashSummary from './components/CashSummary'
 
 const Dashboard = () => {
   // Sample user data for UserDetails
@@ -22,12 +24,15 @@ const Dashboard = () => {
         <div className="col-md-3">
           {/* NavigationCard */}
           <NavigationCard />
+          <CashSummary />
         </div>
+{/*  */}
+
 
         {/* Right column: SalaryDetails content */}
         <div className="col-md-9">
           <div className="card mb-2" >
-            <SalaryDetails user={user} />
+            <LineChartCast />
           </div>
         </div>
 
