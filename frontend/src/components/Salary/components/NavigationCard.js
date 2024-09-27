@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is import
 
 const NavigationCard = () => {
   return (
-    <div className="card text-center mx-auto my-4" style={{ width: '18rem' }}>
+    <div className="card text-center mx-auto my-4" style={{ width: '18rem' , height: '245px'}}>
       <div className="card-body">
         <div className="d-flex flex-column">
           <a href="/addsalary" className="btn btn-primary mb-2">Add Salary</a>

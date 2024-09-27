@@ -3,6 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NavigationCard from './components/NavigationCard'; // Adjust path if needed
 import SalaryDetails from './components/SalaryDetails'; // Adjust path if needed
 import StackedChart from './components/StackedChart';
+import PieChart from './components/PieChart'
+import { BarChart } from 'recharts';
 
 const Dashboard = () => {
   // Sample user data for UserDetails
@@ -15,21 +17,17 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid p-4">
       <div className="row">
         {/* Left column: NavigationCard and UserDetails */}
         <div className="col-md-3">
           {/* NavigationCard */}
-          <NavigationCard />
-
-          {/* User Details */}
-          
+          <NavigationCard />          
         </div>
         
-        {/* Right column: Main dashboard content */}
+        {/* Right column: SalaryDetails content */}
         <div className="col-md-9">
-          <div className="card my-2 h-15 ">
-            {/* <h1>Main Dashboard Content</h1> */}
+          <div className="card my-4">
             <SalaryDetails user={user} />
             {/* Add your other components or content here */}
           </div>
@@ -38,7 +36,6 @@ const Dashboard = () => {
 
         <div className="col-md-8">
           <div className="card my-2 h-15 ">
-            {/* <h1>Main Dashboard Content</h1> */}
             <StackedChart />
             {/* Add your other components or content here */}
           </div>
@@ -46,8 +43,7 @@ const Dashboard = () => {
 
         <div className="col-md-4">
           <div className="card my-2 h-15 ">
-            {/* <h1>Main Dashboard Content</h1> */}
-            <StackedChart />
+            <PieChart data={user} />
             {/* Add your other components or content here */}
           </div>
         </div>
