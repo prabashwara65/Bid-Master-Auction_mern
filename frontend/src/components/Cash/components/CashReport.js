@@ -3,7 +3,6 @@ import axios from "axios";
 import html2pdf from "html2pdf.js";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-
 const URL = "http://localhost:8070/cash";
 
 // Row component for displaying income and expenses data
@@ -199,6 +198,9 @@ function PDFPrint() {
   // Calculate Net Balance
   const netBalance = totalIncome - totalExpenses;
 
+  // Get the current date
+  const currentDate = new Date().toLocaleDateString();
+
   // Function to download the table as a PDF using html2pdf
   const downloadPDF = () => {
     const element = tableRef.current;
@@ -301,75 +303,51 @@ function PDFPrint() {
               <tbody>
                 <tr>
                   <td
-                    colSpan="3"
                     style={{
-                      textAlign: "center",
-                      fontWeight: "bold",
                       border: "1px solid black",
                       padding: "4px",
+                      fontWeight: "bold",
                     }}
                   >
-                    Total Income
+                    Total Income: {totalIncome.toFixed(2)}
                   </td>
                   <td
                     style={{
-                      textAlign: "end",
-                      fontWeight: "bold",
                       border: "1px solid black",
                       padding: "4px",
-                    }}
-                  >
-                    {totalIncome.toFixed(2)}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colSpan="3"
-                    style={{
-                      textAlign: "center",
                       fontWeight: "bold",
-                      border: "1px solid black",
-                      padding: "4px",
                     }}
                   >
-                    Total Expenses
+                    Total Expenses: {totalExpenses.toFixed(2)}
                   </td>
                   <td
                     style={{
-                      textAlign: "end",
-                      fontWeight: "bold",
                       border: "1px solid black",
                       padding: "4px",
-                    }}
-                  >
-                    {totalExpenses.toFixed(2)}
-                  </td>
-                </tr>
-                <tr>
-                  <td
-                    colSpan="3"
-                    style={{
-                      textAlign: "center",
                       fontWeight: "bold",
-                      border: "1px solid black",
-                      padding: "4px",
                     }}
                   >
-                    Net Balance
-                  </td>
-                  <td
-                    style={{
-                      textAlign: "end",
-                      fontWeight: "bold",
-                      border: "1px solid black",
-                      padding: "4px",
-                    }}
-                  >
-                    {netBalance.toFixed(2)}
+                    Net Balance: {netBalance.toFixed(2)}
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          {/* Signature Section */}
+          <div style={{ marginTop: "100px", textAlign: "right" }}>
+            <div
+              style={{
+                borderBottom: "2px dotted black",
+                width: "200px",
+                marginLeft: "430px",
+                //textAlign: 'right',
+              }}
+            >
+              {/* Empty space for the signature */}
+            </div>
+            <p style={{ margin: "0", marginTop: "5px" }}>Date: {currentDate}</p>
+            <p style={{ margin: "0" }}> Manager</p>
           </div>
         </div>
       </div>

@@ -62,7 +62,7 @@ import AddSalary from "./components/Salary/AddSalary";
 import SalaryTable from "./components/Salary/SalaryTable";
 import UpdateSalary from "./components/Salary/UpdateSalary";
 
-import PDFPrint from "./components/Cash/components/PDFPrint";
+import CashReport from "./components/Cash/components/CashReport";
 
 
 
@@ -169,7 +169,7 @@ function App() {
                     <Route path="/salaryTable" element={<SalaryTable />} />
                     <Route path="/updateSalary/:id" element={<UpdateSalary />} />
 
-                    <Route path="/cashReport" element={<PDFPrint />} />
+                    <Route path="/cashReport" element={<CashReport />} />
                     
 
         
