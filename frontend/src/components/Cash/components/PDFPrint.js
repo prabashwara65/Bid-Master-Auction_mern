@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
-import LineChart2 from "./components/LineChart2";
+import LineChart2 from "./LineChart2";
 
 const URL = "http://localhost:8070/cash";
 
