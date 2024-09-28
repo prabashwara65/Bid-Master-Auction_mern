@@ -39,7 +39,7 @@ function UpdateCash() {
         }
 
         try {
-            await axios.put(`http://localhost:5000/cash/${id}`, {
+            await axios.put(`http://localhost:8070/cash/${id}`, {
                 amount: parseFloat(amount),
                 cashType,
                 date,

@@ -203,7 +203,7 @@ function PDFPrint() {
     const options = {
       margin: 1,
       filename: "income_and_expense_table.pdf",
-      image: { type: "pdf", quality: 0.98 },
+      image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
@@ -231,7 +231,7 @@ function PDFPrint() {
         </button>
         <div ref={tableRef}>
           {/* Center the chart */}
-          <div >
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <LineChart2 data={[...operatingIncomes, ...nonOperatingIncomes]} />
           </div>
           <div>
