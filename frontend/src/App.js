@@ -62,7 +62,7 @@ import AddSalary from "./components/Salary/AddSalary";
 import SalaryTable from "./components/Salary/SalaryTable";
 import UpdateSalary from "./components/Salary/UpdateSalary";
 
-import CashReport from "./components/Cash/components/CashReport";
+import CashReport from "./components/Cash/components/CashReportPDF";
 
 
 

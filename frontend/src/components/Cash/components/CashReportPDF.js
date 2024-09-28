@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const URL = "http://localhost:8070/cash";
 
@@ -55,13 +55,16 @@ const fetchHandler = async () => {
 function PDFPrint() {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const tableRef = useRef();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   // Fetch and filter the data
   useEffect(() => {
     fetchHandler().then((data) => {
-      const allIncomes = data.cash.filter((item) => item.cashType === "Income");
+      const allIncomes = data.cash.filter(
+        (item) => item.cashType === "Income"
+      );
       const allExpenses = data.cash.filter(
         (item) => item.cashType === "Expense" || item.cashType === "Peti Cash"
       );
@@ -70,132 +73,26 @@ function PDFPrint() {
     });
   }, []);
 
-  // Filter incomes and expenses
-  const operatingIncomes = incomes.filter((income) =>
-    [
-      "Sales Revenue",
-      "Recurring Revenue",
-      "Rental Income",
-      "Royalties",
-    ].includes(income.description)
+  // Filter incomes and expenses based on selected month
+  const filteredIncomes = incomes.filter((income) =>
+    new Date(income.date).getMonth() === selectedMonth
   );
 
-  const nonOperatingIncomes = incomes.filter((income) =>
-    [
-      "Investment Income",
-      "Grants and Subsidies",
-      "Other Income",
-      "Sponsorship and Advertising Revenue",
-    ].includes(income.description)
+  const filteredExpenses = expenses.filter((expense) =>
+    new Date(expense.date).getMonth() === selectedMonth
   );
 
-  const regularExpenses = expenses.filter((expense) =>
-    ["Fixed Expenses", "Variable Expenses", "Operational Expenses"].includes(
-      expense.description
-    )
-  );
-
-  const pettyCashExpenses = expenses.filter((expense) =>
-    [
-      "Office Supplies",
-      "Employee Reimbursements",
-      "Miscellaneous Expenses",
-    ].includes(expense.description)
-  );
-
-  const rows = [];
-
-  // Add Operating Incomes heading
-  rows.push(
-    <tr key="operating-heading">
-      <td
-        colSpan="3"
-        style={{
-          fontWeight: "bold",
-          textAlign: "center",
-          border: "1px solid black",
-          padding: "4px",
-        }}
-      >
-        Operating Incomes
-      </td>
-      <td
-        colSpan="3"
-        style={{
-          fontWeight: "bold",
-          textAlign: "center",
-          border: "1px solid black",
-          padding: "4px",
-        }}
-      >
-        Regular Expenses
-      </td>
-    </tr>
-  );
-
-  // Add Operating Income rows
-  operatingIncomes.forEach((income, index) => {
-    rows.push(
-      <CashRow
-        key={`operating-income-${index}`}
-        income={income}
-        expense={regularExpenses[index] || null} // Pair with Regular Expenses
-      />
-    );
-  });
-
-  // Add Non-Operating Incomes heading
-  rows.push(
-    <tr key="non-operating-heading">
-      <td
-        colSpan="3"
-        style={{
-          fontWeight: "bold",
-          textAlign: "center",
-          border: "1px solid black",
-          padding: "4px",
-        }}
-      >
-        Non-Operating Incomes
-      </td>
-      <td
-        colSpan="3"
-        style={{
-          fontWeight: "bold",
-          textAlign: "center",
-          border: "1px solid black",
-          padding: "4px",
-        }}
-      >
-        Petty Cash Expenses
-      </td>
-    </tr>
-  );
-
-  // Add Non-Operating Income rows
-  nonOperatingIncomes.forEach((income, index) => {
-    rows.push(
-      <CashRow
-        key={`non-operating-income-${index}`}
-        income={income}
-        expense={pettyCashExpenses[index] || null} // Pair with Petty Cash Expenses
-      />
-    );
-  });
-
-  // Calculate Total Income
-  const totalIncome = [...operatingIncomes, ...nonOperatingIncomes].reduce(
+  // Total Income and Expenses calculations
+  const totalIncome = filteredIncomes.reduce(
     (total, income) => total + income.amount,
     0
   );
 
-  // Calculate Total Expenses
-  const totalExpenses = [...regularExpenses, ...pettyCashExpenses].reduce(
+  const totalExpenses = filteredExpenses.reduce(
     (total, expense) => total + expense.amount,
     0
   );
 
-  // Calculate Net Balance
   const netBalance = totalIncome - totalExpenses;
 
   // Get the current date
@@ -223,6 +120,20 @@ function PDFPrint() {
           Income and Expense Table
         </h1>
         <hr />
+        <label htmlFor="month-select">Select Month:</label>
+        <select
+          id="month-select"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(Number(e.target.value))}
+          style={{ marginBottom: "15px", padding: "10px", cursor: "pointer" }}
+        >
+          {Array.from({ length: 12 }, (_, i) => (
+            <option key={i} value={i}>
+              {new Date(0, i).toLocaleString("default", { month: "long" })}
+            </option>
+          ))}
+        </select>
+
         <button
           style={{
             marginBottom: "15px",
@@ -234,20 +145,18 @@ function PDFPrint() {
         >
           Download PDF
         </button>
+
         <div ref={tableRef}>
-          {/* Center the chart */}
           <div>
             <div className="d-flex align-items-center">
               <div>
                 <img
                   src="/Assests/bid-master-logo-zip-file/png/logo-no-background.png"
-                  className="img-fluid w-50" // Adjust the width as needed
+                  className="img-fluid w-50"
                   alt="logo"
                 />
               </div>
               <div className="ms-3">
-                {" "}
-                {/* Add some left margin to separate from the logo */}
                 <h5>Arcade Independence Square, Colombo 07, Sri Lanka</h5>
                 <p>Call us: +94 xxxxxxxxx</p>
                 <p>
@@ -257,7 +166,8 @@ function PDFPrint() {
               </div>
             </div>
           </div>
-          <div style={{marginTop: '30px'}}>
+
+          <div style={{ marginTop: "30px" }}>
             <table
               style={{
                 width: "100%",
@@ -287,7 +197,15 @@ function PDFPrint() {
                   </th>
                 </tr>
               </thead>
-              <tbody>{rows}</tbody>
+              <tbody>
+                {filteredIncomes.map((income, index) => (
+                  <CashRow
+                    key={`income-${index}`}
+                    income={income}
+                    expense={filteredExpenses[index] || null}
+                  />
+                ))}
+              </tbody>
             </table>
           </div>
 
@@ -342,9 +260,7 @@ function PDFPrint() {
                 width: "200px",
                 marginLeft: "430px",
               }}
-            >
-              {/* Empty space for the signature */}
-            </div>
+            />
             <p style={{ margin: "0", marginTop: "5px" }}>Date: {currentDate}</p>
             <p style={{ margin: "0" }}> Manager</p>
           </div>
