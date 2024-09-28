@@ -40,7 +40,7 @@ const Dashboard = () => {
         </div>
 
         <div className="col-md-3">
-          <div className="card my-2" style={{ width: '340px' , height: '350px'}}>
+          <div className="card my-2" style={{ width: '320px' , height: '350px'}}>
             <PieChart data={user} />
           </div>
         </div>

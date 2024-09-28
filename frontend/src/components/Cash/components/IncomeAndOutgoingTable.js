@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"; // Importing useNavigate for rou
 
 const URL = "http://localhost:8070/cash";
 
-// Row component for displaying income and expenses data with Update and Delete buttons
 const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome, onDeleteExpense }) => {
     const formattedIncomeDate = income ? new Date(income.date).toISOString().split("T")[0] : "";
     const formattedExpenseDate = expense ? new Date(expense.date).toISOString().split("T")[0] : "";
@@ -81,17 +80,14 @@ const fetchHandler = async () => {
 function IncomeAndOutgoingTable() {
     const [incomes, setIncomes] = useState([]);
     const [expenses, setExpenses] = useState([]);
+    const [selectedMonth, setSelectedMonth] = useState(""); // State for selected month
     const navigate = useNavigate();
 
     // Fetch and filter the data
     useEffect(() => {
         fetchHandler().then((data) => {
-            const allIncomes = data.cash.filter((item) => item.cashType === "Income");
-            const allExpenses = data.cash.filter(
-                (item) => item.cashType === "Expense" || item.cashType === "Peti Cash"
-            );
-            setIncomes(allIncomes);
-            setExpenses(allExpenses);
+            setIncomes(data.cash.filter((item) => item.cashType === "Income"));
+            setExpenses(data.cash.filter((item) => item.cashType === "Expense" || item.cashType === "Peti Cash"));
         });
     }, []);
 
@@ -127,20 +123,31 @@ function IncomeAndOutgoingTable() {
         }
     };
 
-    // Filter incomes and expenses
-    const operatingIncomes = incomes.filter(income => 
+    // Filter data based on selected month
+    const filterByMonth = (data) => {
+        if (!selectedMonth) return data;
+        return data.filter((item) => {
+            const itemMonth = new Date(item.date).getMonth() + 1; // Get month from date
+            return itemMonth === parseInt(selectedMonth);
+        });
+    };
+
+    const filteredIncomes = filterByMonth(incomes);
+    const filteredExpenses = filterByMonth(expenses);
+
+    const operatingIncomes = filteredIncomes.filter(income => 
         ["Sales Revenue", "Recurring Revenue", "Rental Income", "Royalties"].includes(income.description)
     );
 
-    const nonOperatingIncomes = incomes.filter(income => 
+    const nonOperatingIncomes = filteredIncomes.filter(income => 
         ["Investment Income", "Grants and Subsidies", "Other Income", "Sponsorship and Advertising Revenue"].includes(income.description)
     );
 
-    const regularExpenses = expenses.filter(expense => 
+    const regularExpenses = filteredExpenses.filter(expense => 
         ["Fixed Expenses", "Variable Expenses", "Operational Expenses"].includes(expense.description)
     );
 
-    const pettyCashExpenses = expenses.filter(expense => 
+    const pettyCashExpenses = filteredExpenses.filter(expense => 
         ["Office Supplies", "Employee Reimbursements", "Miscellaneous Expenses"].includes(expense.description)
     );
 
@@ -192,13 +199,13 @@ function IncomeAndOutgoingTable() {
         );
     });
 
-    // Calculate Total Income
-    const totalIncome = [...operatingIncomes, ...nonOperatingIncomes].reduce((total, income) => total + income.amount, 0);
+    // Calculate Total Income for the selected month
+    const totalIncome = filteredIncomes.reduce((total, income) => total + income.amount, 0);
 
-    // Calculate Total Expenses
-    const totalExpenses = [...regularExpenses, ...pettyCashExpenses].reduce((total, expense) => total + expense.amount, 0);
+    // Calculate Total Expenses for the selected month
+    const totalExpenses = filteredExpenses.reduce((total, expense) => total + expense.amount, 0);
 
-    // Calculate Net Balance
+    // Calculate Net Balance for the selected month
     const netBalance = totalIncome - totalExpenses;
 
     // Determine class and message for the total row based on netBalance
@@ -206,10 +213,43 @@ function IncomeAndOutgoingTable() {
     const totalRowClass = isNetLoss ? "table-danger" : "table-success";
     const totalRowMessage = isNetLoss ? "COMPANY LOST" : "COMPANY PROFIT";
 
+    // Generate Month Options
+    const months = [
+        { value: "1", label: "January" },
+        { value: "2", label: "February" },
+        { value: "3", label: "March" },
+        { value: "4", label: "April" },
+        { value: "5", label: "May" },
+        { value: "6", label: "June" },
+        { value: "7", label: "July" },
+        { value: "8", label: "August" },
+        { value: "9", label: "September" },
+        { value: "10", label: "October" },
+        { value: "11", label: "November" },
+        { value: "12", label: "December" }
+    ];
+
     return (
         <div className="container">
             <h1>Income and Expense Table</h1>
             <hr />
+            {/* Month selection dropdown */}
+            <div className="mb-3">
+                <label htmlFor="monthSelect" className="form-label">Select Month:</label>
+                <select
+                    id="monthSelect"
+                    className="form-select"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                >
+                    <option value="">All Months</option>
+                    {months.map((month) => (
+                        <option key={month.value} value={month.value}>
+                            {month.label}
+                        </option>
+                    ))}
+                </select>
+            </div>
             <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto" }}>
                 <table className="table table-striped table-bordered">
                     <thead className="thead-dark">

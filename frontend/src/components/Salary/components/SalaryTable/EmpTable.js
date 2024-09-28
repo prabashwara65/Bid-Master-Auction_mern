@@ -134,7 +134,7 @@ function SalaryTable() {
           value={searchTerm}
           onChange={handleSearch}
         />
-        <div className="table-responsive">
+        <div className="table-responsive" style={{overflowY: "auto"}}>
           <table className="table table-striped table-bordered">
             <thead className="thead-dark">
               <tr>
