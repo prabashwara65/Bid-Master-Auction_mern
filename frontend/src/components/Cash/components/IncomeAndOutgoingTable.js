@@ -192,6 +192,12 @@ function IncomeAndOutgoingTable() {
         );
     });
 
+    // Calculate Total Income
+    const totalIncome = [...operatingIncomes, ...nonOperatingIncomes].reduce((total, income) => total + income.amount, 0);
+
+    // Calculate Total Expenses
+    const totalExpenses = [...regularExpenses, ...pettyCashExpenses].reduce((total, expense) => total + expense.amount, 0);
+
     return (
         <div className="container">
             <h1>Income and Expense Table</h1>
@@ -211,6 +217,14 @@ function IncomeAndOutgoingTable() {
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>
+                    <tfoot>
+                        <tr>
+                            <td colSpan="3" className="text-center"><strong>Total Income</strong></td>
+                            <td className="text-end"><strong>Rs.{totalIncome.toFixed(2)}</strong></td>
+                            <td colSpan="3" className="text-center"><strong>Total Expenses</strong></td>
+                            <td className="text-end"><strong>Rs.{totalExpenses.toFixed(2)}</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
