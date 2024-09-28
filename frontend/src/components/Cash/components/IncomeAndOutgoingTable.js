@@ -5,54 +5,68 @@ import { useNavigate } from "react-router-dom"; // Importing useNavigate for rou
 
 const URL = "http://localhost:8070/cash";
 
-// Row component for displaying income and expenses data with Update buttons
-const CashRow = ({ income, expense, onEditIncome, onEditExpense }) => {
+// Row component for displaying income and expenses data with Update and Delete buttons
+const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome, onDeleteExpense }) => {
     const formattedIncomeDate = income ? new Date(income.date).toISOString().split("T")[0] : "";
     const formattedExpenseDate = expense ? new Date(expense.date).toISOString().split("T")[0] : "";
 
     return (
         <tr>
             {/* Incomes */}
-            <td>{formattedIncomeDate}</td>
-            <td>{income?.description || ""}</td>
+            <td>
+                {formattedIncomeDate}
+                {income && <div className="mt-1"><span className="badge bg-success">{income.cashType}</span></div>}
+            </td>
+            <td className="text-wrap">{income?.description || ""}</td> {/* Added text-wrap for word wrapping */}
             <td>Rs.{income ? income.amount.toFixed(2) : ""}</td>
             <td>
-                {income && <span className="badge bg-success">{income.cashType}</span>}
-            </td>
-            <td>
                 {income && (
-                    <button
-                        className="btn btn-warning btn-sm"
-                        onClick={() => onEditIncome(income._id)}
-                    >
-                        Update
-                    </button>
+                    <div className="d-flex flex-column">
+                        <button
+                            className="btn btn-warning btn-sm mb-2"
+                            onClick={() => onEditIncome(income._id)}
+                        >
+                            Update
+                        </button>
+                        <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => onDeleteIncome(income._id)}
+                        >
+                            Delete
+                        </button>
+                    </div>
                 )}
             </td>
 
             {/* Expenses and Petty Cash */}
-            <td>{formattedExpenseDate}</td>
-            <td>{expense?.description || ""}</td>
+            <td>
+                {formattedExpenseDate}
+                {expense && (
+                    <div className="mt-1">
+                        <span className={`badge ${expense.cashType === "Expense" ? "bg-danger" : "bg-warning"}`}>
+                            {expense.cashType}
+                        </span>
+                    </div>
+                )}
+            </td>
+            <td className="text-wrap">{expense?.description || ""}</td> {/* Added text-wrap for word wrapping */}
             <td>Rs.{expense ? expense.amount.toFixed(2) : ""}</td>
             <td>
                 {expense && (
-                    <span
-                        className={`badge ${
-                            expense.cashType === "Expense" ? "bg-danger" : "bg-warning"
-                        }`}
-                    >
-                        {expense.cashType}
-                    </span>
-                )}
-            </td>
-            <td>
-                {expense && (
-                    <button
-                        className="btn btn-warning btn-sm"
-                        onClick={() => onEditExpense(expense._id)}
-                    >
-                        Update
-                    </button>
+                    <div className="d-flex flex-column">
+                        <button
+                            className="btn btn-warning btn-sm mb-2"
+                            onClick={() => onEditExpense(expense._id)}
+                        >
+                            Update
+                        </button>
+                        <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => onDeleteExpense(expense._id)}
+                        >
+                            Delete
+                        </button>
+                    </div>
                 )}
             </td>
         </tr>
@@ -91,6 +105,28 @@ function IncomeAndOutgoingTable() {
         navigate(`/updateCash/${id}`); // Navigate to the update page with the expense id
     };
 
+    // Handle row deletion for income
+    const handleDeleteIncome = async (id) => {
+        try {
+            await axios.delete(`${URL}/${id}`);
+            const updatedIncomes = incomes.filter((income) => income._id !== id);
+            setIncomes(updatedIncomes);
+        } catch (error) {
+            console.error("Failed to delete income:", error);
+        }
+    };
+
+    // Handle row deletion for expense
+    const handleDeleteExpense = async (id) => {
+        try {
+            await axios.delete(`${URL}/${id}`);
+            const updatedExpenses = expenses.filter((expense) => expense._id !== id);
+            setExpenses(updatedExpenses);
+        } catch (error) {
+            console.error("Failed to delete expense:", error);
+        }
+    };
+
     // Create rows by pairing incomes and expenses
     const rows = [];
     const maxLength = Math.max(incomes.length, expenses.length);
@@ -103,6 +139,8 @@ function IncomeAndOutgoingTable() {
                 expense={expenses[i] || null}
                 onEditIncome={handleEditIncome}
                 onEditExpense={handleEditExpense}
+                onDeleteIncome={handleDeleteIncome}
+                onDeleteExpense={handleDeleteExpense}
             />
         );
     }
@@ -116,14 +154,12 @@ function IncomeAndOutgoingTable() {
                     <thead className="thead-dark">
                         <tr>
                             <th>Date (Income)</th>
-                            <th>Description (Income)</th>
+                            <th style={{ width: "20%" }}>Description (Income)</th> {/* Increased width */}
                             <th>Amount (Income)</th>
-                            <th>Cash Type (Income)</th>
                             <th>Action (Income)</th> {/* Action column for income */}
                             <th>Date (Expense)</th>
-                            <th>Description (Expense)</th>
+                            <th style={{ width: "20%" }}>Description (Expense)</th> {/* Increased width */}
                             <th>Amount (Expense)</th>
-                            <th>Cash Type (Expense)</th>
                             <th>Action (Expense)</th> {/* Action column for expenses */}
                         </tr>
                     </thead>
