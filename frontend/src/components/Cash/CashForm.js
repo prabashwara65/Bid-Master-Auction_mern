@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Nav from '../Nav';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function CashForm() {
@@ -9,7 +8,32 @@ function CashForm() {
     const [cashType, setCashType] = useState("");
     const [date, setDate] = useState("");
     const [description, setDescription] = useState("");
+    const [error, setError] = useState(""); // State for error message
     const navigate = useNavigate();
+
+    // Valid description options for different cash types
+    const validIncomeDescriptions = [
+        "Sales Revenue",
+        "Recurring Revenue",
+        "Rental Income",
+        "Royalties",
+        "Investment Income",
+        "Grants and Subsidies",
+        "Other Income",
+        "Sponsorship and Advertising Revenue",
+    ];
+
+    const validExpenseDescriptions = [
+        "Fixed Expenses",
+        "Variable Expenses",
+        "Operational Expenses",
+    ];
+
+    const validPetiCashDescriptions = [
+        "Office Supplies",
+        "Employee Reimbursements",
+        "Miscellaneous Expenses",
+    ];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,6 +41,9 @@ function CashForm() {
             alert("Amount cannot be negative.");
             return;
         }
+
+        // Reset error message before submitting
+        setError("");
 
         try {
             await axios.post("http://localhost:8070/cash/", {
@@ -40,9 +67,58 @@ function CashForm() {
         setAmount(value);
     };
 
+    const handleDescriptionChange = (e) => {
+        const value = e.target.value;
+        setDescription(value); // Update the description as user types
+        setError(""); // Reset error message
+
+        // Check if cash type is Income
+        if (cashType === "Income") {
+            const trimmedValue = value.trim();
+            const isValid = validIncomeDescriptions.some(desc => 
+                desc.toLowerCase().startsWith(trimmedValue.toLowerCase())
+            );
+
+            if (!isValid && trimmedValue.length > 0) {
+                setError("Invalid description for Income. Please enter a valid option.");
+                setDescription(""); // Clear description field
+            }
+        }
+        // Check if cash type is Expense
+        else if (cashType === "Expense") {
+            const trimmedValue = value.trim();
+            const isValid = validExpenseDescriptions.some(desc => 
+                desc.toLowerCase().startsWith(trimmedValue.toLowerCase())
+            );
+
+            if (!isValid && trimmedValue.length > 0) {
+                setError("Invalid description for Expense. Please enter a valid option.");
+                setDescription(""); // Clear description field
+            }
+        }
+        // Check if cash type is Peti Cash
+        else if (cashType === "Peti Cash") {
+            const trimmedValue = value.trim();
+            const isValid = validPetiCashDescriptions.some(desc => 
+                desc.toLowerCase().startsWith(trimmedValue.toLowerCase())
+            );
+
+            if (!isValid && trimmedValue.length > 0) {
+                setError("Invalid description for Peti Cash. Please enter a valid option.");
+                setDescription(""); // Clear description field
+            }
+        }
+        else {
+            // Clear description if it is a number
+            if (!isNaN(value) && value.trim() !== "") {
+                setError("Description must be a string. Please enter a valid description.");
+                setDescription(""); // Clear description field
+            }
+        }
+    };
+
     return (
         <>
-            <Nav />
             <div className="container vh-100 d-flex align-items-center justify-content-center">
                 <div className="col-lg-6">
                     <div className="card shadow border-0 rounded">
@@ -84,10 +160,18 @@ function CashForm() {
                                     <textarea
                                         className="form-control"
                                         value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        onChange={handleDescriptionChange}
                                         required
                                         rows="3"
+                                        placeholder={
+                                            cashType === "Income" ? 
+                                            "Possible values: Sales Revenue, Recurring Revenue, Rental Income, Royalties, Investment Income, Grants and Subsidies, Other Income, Sponsorship and Advertising Revenue" :
+                                            cashType === "Expense" ?
+                                            "Possible values: Fixed Expenses, Variable Expenses, Operational Expenses" :
+                                            "Possible values: Office Supplies, Employee Reimbursements, Miscellaneous Expenses"
+                                        }
                                     ></textarea>
+                                    {error && <div className="text-danger mt-2">{error}</div>} {/* Show error message */}
                                 </div>
 
                                 <div className="mb-3">
