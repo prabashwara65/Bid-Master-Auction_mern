@@ -113,6 +113,12 @@ function PDFPrint() {
     navigate('/cashTable'); 
   };
 
+  // Determine the style for net balance
+  const netBalanceStyle = {
+    color: netBalance > 0 ? "green" : netBalance < 0 ? "red" : "inherit",
+    fontWeight: "bold"
+  };
+
   return (
     <div>
       <div style={{ padding: "20px" }}>
@@ -242,7 +248,7 @@ function PDFPrint() {
                     style={{
                       border: "1px solid black",
                       padding: "4px",
-                      fontWeight: "bold",
+                      ...netBalanceStyle
                     }}
                   >
                     Net Balance: {netBalance.toFixed(2)}

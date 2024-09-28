@@ -70,7 +70,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
             </td>
         </tr>
     );
-};
+}
 
 // Fetch the cash data from API
 const fetchHandler = async () => {
@@ -86,6 +86,7 @@ function IncomeAndOutgoingTable() {
     // Fetch and filter the data
     useEffect(() => {
         fetchHandler().then((data) => {
+            console.log("Fetched Data:", data); // Debug log
             setIncomes(data.cash.filter((item) => item.cashType === "Income"));
             setExpenses(data.cash.filter((item) => item.cashType === "Expense" || item.cashType === "Peti Cash"));
         });
@@ -161,20 +162,26 @@ function IncomeAndOutgoingTable() {
         </tr>
     );
 
+    // Calculate the maximum number of rows for Operating Incomes and Regular Expenses
+    const maxOperatingRows = Math.max(operatingIncomes.length, regularExpenses.length);
+
     // Add Operating Income rows
-    operatingIncomes.forEach((income, index) => {
+    for (let index = 0; index < maxOperatingRows; index++) {
+        const income = operatingIncomes[index] || null; // Get income or null if not available
+        const expense = regularExpenses[index] || null; // Get expense or null if not available
+
         rows.push(
             <CashRow
-                key={`operating-income-${index}`}
+                key={`operating-row-${index}`}
                 income={income}
-                expense={regularExpenses[index] || null} // Pair with Regular Expenses
+                expense={expense}
                 onEditIncome={handleEditIncome}
                 onEditExpense={handleEditExpense}
                 onDeleteIncome={handleDeleteIncome}
                 onDeleteExpense={handleDeleteExpense}
             />
         );
-    });
+    }
 
     // Add Non-Operating Incomes heading
     rows.push(
@@ -184,20 +191,26 @@ function IncomeAndOutgoingTable() {
         </tr>
     );
 
+    // Calculate the maximum number of rows for Non-Operating Incomes and Petty Cash Expenses
+    const maxNonOperatingRows = Math.max(nonOperatingIncomes.length, pettyCashExpenses.length);
+
     // Add Non-Operating Income rows
-    nonOperatingIncomes.forEach((income, index) => {
+    for (let index = 0; index < maxNonOperatingRows; index++) {
+        const income = nonOperatingIncomes[index] || null; // Get income or null if not available
+        const expense = pettyCashExpenses[index] || null; // Get expense or null if not available
+
         rows.push(
             <CashRow
-                key={`non-operating-income-${index}`}
+                key={`non-operating-row-${index}`}
                 income={income}
-                expense={pettyCashExpenses[index] || null} // Pair with Petty Cash Expenses
+                expense={expense}
                 onEditIncome={handleEditIncome}
                 onEditExpense={handleEditExpense}
                 onDeleteIncome={handleDeleteIncome}
                 onDeleteExpense={handleDeleteExpense}
             />
         );
-    });
+    }
 
     // Calculate Total Income for the selected month
     const totalIncome = filteredIncomes.reduce((total, income) => total + income.amount, 0);
@@ -208,10 +221,13 @@ function IncomeAndOutgoingTable() {
     // Calculate Net Balance for the selected month
     const netBalance = totalIncome - totalExpenses;
 
-    // Determine class and message for the total row based on netBalance
-    const isNetLoss = netBalance <= 0;
-    const totalRowClass = isNetLoss ? "table-danger" : "table-success";
-    const totalRowMessage = isNetLoss ? "COMPANY LOST" : "COMPANY PROFIT";
+    // Determine class for the total row based on netBalance
+    let totalRowClass = "";
+    if (netBalance > 0) {
+        totalRowClass = "table-success"; // Green for profit
+    } else if (netBalance < 0) {
+        totalRowClass = "table-danger"; // Red for loss
+    }
 
     // Generate Month Options
     const months = [
@@ -226,16 +242,13 @@ function IncomeAndOutgoingTable() {
         { value: "9", label: "September" },
         { value: "10", label: "October" },
         { value: "11", label: "November" },
-        { value: "12", label: "December" }
+        { value: "12", label: "December" },
     ];
 
     return (
-        <div className="container">
-            <h1>Income and Expense Table</h1>
-            <hr />
-            {/* Month selection dropdown */}
+        <div>
             <div className="mb-3">
-                <label htmlFor="monthSelect" className="form-label">Select Month:</label>
+                <label htmlFor="monthSelect" className="form-label">Select Month</label>
                 <select
                     id="monthSelect"
                     className="form-select"
@@ -244,41 +257,38 @@ function IncomeAndOutgoingTable() {
                 >
                     <option value="">All Months</option>
                     {months.map((month) => (
-                        <option key={month.value} value={month.value}>
-                            {month.label}
-                        </option>
+                        <option key={month.value} value={month.value}>{month.label}</option>
                     ))}
                 </select>
             </div>
-            <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto" }}>
-                <table className="table table-striped table-bordered">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Date (Income)</th>
-                            <th style={{ width: "20%" }}>Description (Income)</th>
-                            <th>Amount (Income)</th>
-                            <th>Action (Income)</th>
-                            <th>Date (Expense)</th>
-                            <th style={{ width: "20%" }}>Description (Expense)</th>
-                            <th>Amount (Expense)</th>
-                            <th>Action (Expense)</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                </table>
-            </div>
-            {/* Footer to show totals */}
-            <table className={`table ${totalRowClass}`}>
-                <tbody>
+
+            <table className="table table-bordered">
+                <thead>
                     <tr>
-                        <td colSpan="3" className="text-center"><strong>Total Income</strong></td>
-                        <td className="text-end"><strong>Rs.{totalIncome.toFixed(2)}</strong></td>
-                        <td colSpan="3" className="text-center"><strong>Total Expenses</strong></td>
-                        <td className="text-end"><strong>Rs.{totalExpenses.toFixed(2)}</strong></td>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
                     </tr>
-                    <tr>
-                        <td colSpan="7" className="text-center" style={{ fontSize: "1.5rem" }}><strong>{totalRowMessage}</strong></td>
-                        <td className="text-end" style={{ fontSize: "1.5rem" }}><strong>Rs.{netBalance.toFixed(2)}</strong></td>
+                </thead>
+                <tbody>
+                    {rows}
+                    <tr className={totalRowClass}>
+                        <td colSpan="2" className="text-center">Total Income:</td>
+                        <td>{totalIncome.toFixed(2)}</td>
+                        <td></td>
+                        <td colSpan="2" className="text-center">Total Expenses:</td>
+                        <td>{totalExpenses.toFixed(2)}</td>
+                        <td></td>
+                    </tr>
+                    <tr className={totalRowClass}>
+                        <td colSpan="6" className="text-right">Net Balance:</td>
+                        <td>{netBalance.toFixed(2)}</td>
+                        <td colSpan="4"></td>
                     </tr>
                 </tbody>
             </table>
