@@ -18,7 +18,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                 {income && <div className="mt-1"><span className="badge bg-success">{income.cashType}</span></div>}
             </td>
             <td className="text-wrap">{income?.description || ""}</td>
-            <td>Rs.{income ? income.amount.toFixed(2) : ""}</td>
+            <td>{income ? income.amount.toFixed(2) : ""}</td>
             <td>
                 {income && (
                     <div className="d-flex flex-column">
@@ -50,7 +50,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                 )}
             </td>
             <td className="text-wrap">{expense?.description || ""}</td>
-            <td>Rs.{expense ? expense.amount.toFixed(2) : ""}</td>
+            <td>{expense ? expense.amount.toFixed(2) : ""}</td>
             <td>
                 {expense && (
                     <div className="d-flex flex-column">
@@ -210,7 +210,7 @@ function IncomeAndOutgoingTable() {
         <div className="container">
             <h1>Income and Expense Table</h1>
             <hr />
-            <div className="table-responsive">
+            <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto" }}>
                 <table className="table table-striped table-bordered">
                     <thead className="thead-dark">
                         <tr>
@@ -225,20 +225,23 @@ function IncomeAndOutgoingTable() {
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>
-                    <tfoot className={totalRowClass}>
-                        <tr>
-                            <td colSpan="3" className="text-center"><strong>Total Income</strong></td>
-                            <td className="text-end"><strong>Rs.{totalIncome.toFixed(2)}</strong></td>
-                            <td colSpan="3" className="text-center"><strong>Total Expenses</strong></td>
-                            <td className="text-end"><strong>Rs.{totalExpenses.toFixed(2)}</strong></td>
-                        </tr>
-                        <tr>
-                            <td colSpan="7" className="text-center" style={{ fontSize: "1.5rem" }}><strong>{totalRowMessage}</strong></td>
-                            <td className="text-end" style={{ fontSize: "1.5rem" }}><strong>Rs.{netBalance.toFixed(2)}</strong></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
+            {/* Footer to show totals */}
+            <table className={`table ${totalRowClass}`}>
+                <tbody>
+                    <tr>
+                        <td colSpan="3" className="text-center"><strong>Total Income</strong></td>
+                        <td className="text-end"><strong>Rs.{totalIncome.toFixed(2)}</strong></td>
+                        <td colSpan="3" className="text-center"><strong>Total Expenses</strong></td>
+                        <td className="text-end"><strong>Rs.{totalExpenses.toFixed(2)}</strong></td>
+                    </tr>
+                    <tr>
+                        <td colSpan="7" className="text-center" style={{ fontSize: "1.5rem" }}><strong>{totalRowMessage}</strong></td>
+                        <td className="text-end" style={{ fontSize: "1.5rem" }}><strong>Rs.{netBalance.toFixed(2)}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }
