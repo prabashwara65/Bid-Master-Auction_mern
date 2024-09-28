@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
-import LineChart2 from "./LineChart2";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 const URL = "http://localhost:8070/cash";
 
@@ -56,6 +57,7 @@ function PDFPrint() {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const tableRef = useRef();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch and filter the data
   useEffect(() => {
@@ -209,6 +211,7 @@ function PDFPrint() {
     };
 
     html2pdf().from(element).set(options).save();
+    navigate('/cashTable'); 
   };
 
   return (
@@ -232,17 +235,27 @@ function PDFPrint() {
         <div ref={tableRef}>
           {/* Center the chart */}
           <div>
-            <div>
-              <img
-                src="/Assests/bid-master-logo-zip-file/png/logo-no-background.png"
-                className="img-fluid"
-                alt="logo"
-              />
+            <div className="d-flex align-items-center">
+              <div>
+                <img
+                  src="/Assests/bid-master-logo-zip-file/png/logo-no-background.png"
+                  className="img-fluid w-50" // Adjust the width as needed
+                  alt="logo"
+                />
+              </div>
+              <div className="ms-3">
+                {" "}
+                {/* Add some left margin to separate from the logo */}
+                <h5>Arcade Independence Square, Colombo 07, Sri Lanka</h5>
+                <p>Call us: +94 xxxxxxxxx</p>
+                <p>
+                  Mail us:{" "}
+                  <a href="mailto:bidmaster@gmail.com">bidmaster@gmail.com</a>
+                </p>
+              </div>
             </div>
-
-            <LineChart2 data={[...operatingIncomes, ...nonOperatingIncomes]} />
           </div>
-          <div>
+          <div style={{marginTop: '30px'}}>
             <table
               style={{
                 width: "100%",
