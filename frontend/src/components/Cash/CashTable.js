@@ -26,8 +26,6 @@ const Dashboard = () => {
           <NavigationCard />
           <CashSummary />
         </div>
-{/*  */}
-
 
         {/* Right column: SalaryDetails content */}
         <div className="col-md-9">
@@ -36,13 +34,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="col-md-6">
+        <div className="col-md-6 mt-3">
           <div className="card mb-2" >
             <IncomesCash />
           </div>
         </div>
 
-        <div className="col-md-6">
+        <div className="col-md-6 mt-3">
           <div className="card mb-2" >
             <OutgoingCash />
           </div>

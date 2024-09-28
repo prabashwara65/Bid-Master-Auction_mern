@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom"; // Importing useNavigate for routing
 
 const URL = "http://localhost:8070/cash";
 
 // Row component for displaying data
-const CashRow = ({ cash }) => {
+const CashRow = ({ cash, onEdit }) => {
     const formattedDate = new Date(cash.date).toISOString().split("T")[0];
     const cashTypeColor = cash.cashType === "Expense" ? "bg-danger" : "bg-warning";
 
@@ -14,10 +15,16 @@ const CashRow = ({ cash }) => {
             <td>{formattedDate}</td>
             <td>{cash.description}</td>
             <td>Rs.{cash.amount.toFixed(2)}</td>
-            <td>
-                <span className={`badge ${cashTypeColor}`}>
+            <td className="d-flex align-items-center"> {/* Flex container for alignment */}
+                <span className={`badge ${cashTypeColor} me-2`}> {/* Add margin to right */}
                     {cash.cashType}
                 </span>
+                <button
+                    className="btn btn-warning btn-sm" // Update button styles
+                    onClick={() => onEdit(cash._id)} // Call onEdit with the cash id
+                >
+                    Update
+                </button>
             </td>
         </tr>
     );
@@ -30,6 +37,7 @@ const fetchHandler = async () => {
 
 function CashTable() {
     const [cashRecords, setCashRecords] = useState([]);
+    const navigate = useNavigate(); // Initialize useNavigate
 
     // Fetch and combine the data for Expenses and Peti Cash
     useEffect(() => {
@@ -41,9 +49,14 @@ function CashTable() {
         });
     }, []);
 
+    // Handle row edit
+    const handleEdit = (id) => {
+        navigate(`/updateCash/${id}`); // Navigate to the update route
+    };
+
     return (
         <>
-            <div className="container mt-5">
+            <div className="container ">
                 {/* Combined Table for Expenses and Peti Cash */}
                 <h1>Expenses and Peti Cash Table</h1>
                 <hr />
@@ -59,7 +72,7 @@ function CashTable() {
                         </thead>
                         <tbody>
                             {cashRecords.map((cash) => (
-                                <CashRow key={cash._id} cash={cash} />
+                                <CashRow key={cash._id} cash={cash} onEdit={handleEdit} />
                             ))}
                         </tbody>
                     </table>

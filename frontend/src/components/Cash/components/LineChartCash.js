@@ -107,16 +107,16 @@ const CashLineChart = () => {
   }, []);
 
   return (
-    <div className="container mt-2" style={{  height: '500px', width: '100%' }}>
+    <div className="container mt-2" style={{  height: '500px', width: '100%' , marginBottom: '20px'}}>
       <div className="row justify-content-center" style={{height: '800px',  width: '100%' }}>
-        <div className="col-lg-8 col-md-10 col-sm-12" style={{height: '500px',  width: '100%' }}>
+        <div className="col-lg-8 col-md-10 col-sm-12" style={{height: '500px',  width: '100%'  }}>
           <div className="card shadow-sm" >
             <div className="card-body" >
               <h4 className="card-title text-center">Cash Flow Over Time</h4>
               {loading ? (
                 <p>Loading chart...</p>
               ) : (
-                <div style={{ position: 'relative', height: '300px', width: '100%' }}>
+                <div style={{ position: 'relative', height: '350px', width: '100%'  }}>
                   <Line
                     data={chartData}
                     options={{
