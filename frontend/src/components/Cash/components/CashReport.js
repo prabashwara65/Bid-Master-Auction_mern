@@ -341,7 +341,6 @@ function PDFPrint() {
                 borderBottom: "2px dotted black",
                 width: "200px",
                 marginLeft: "430px",
-                //textAlign: 'right',
               }}
             >
               {/* Empty space for the signature */}
