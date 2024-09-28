@@ -114,7 +114,7 @@ const CashLineChart = () => {
             {loading ? (
               <p>Loading chart...</p>
             ) : (
-              <div style={{  height: '350px', width: '40%' }}>
+              <div style={{  height: '400px', width: '45%', marginTop: '60px'}}>
                 <Line
                   data={chartData}
                   options={{

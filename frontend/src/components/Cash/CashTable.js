@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
-import LineChart2 from './components/LineChart2';
+import LineChart2 from "./components/LineChart2";
 
 const URL = "http://localhost:8070/cash";
 
@@ -203,7 +203,7 @@ function PDFPrint() {
     const options = {
       margin: 1,
       filename: "income_and_expense_table.pdf",
-      image: { type: "pdf", quality: 0.98 },
+      image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
@@ -231,7 +231,15 @@ function PDFPrint() {
         </button>
         <div ref={tableRef}>
           {/* Center the chart */}
-          <div >
+          <div>
+            <div>
+              <img
+                src="/Assests/bid-master-logo-zip-file/png/logo-no-background.png"
+                className="img-fluid"
+                alt="logo"
+              />
+            </div>
+
             <LineChart2 data={[...operatingIncomes, ...nonOperatingIncomes]} />
           </div>
           <div>
@@ -267,87 +275,90 @@ function PDFPrint() {
               <tbody>{rows}</tbody>
             </table>
           </div>
+
+          {/* Footer to show totals */}
+          <div style={{ marginTop: "20px" }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "0.9rem",
+              }}
+            >
+              <tbody>
+                <tr>
+                  <td
+                    colSpan="3"
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      border: "1px solid black",
+                      padding: "4px",
+                    }}
+                  >
+                    Total Income
+                  </td>
+                  <td
+                    style={{
+                      textAlign: "end",
+                      fontWeight: "bold",
+                      border: "1px solid black",
+                      padding: "4px",
+                    }}
+                  >
+                    {totalIncome.toFixed(2)}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colSpan="3"
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      border: "1px solid black",
+                      padding: "4px",
+                    }}
+                  >
+                    Total Expenses
+                  </td>
+                  <td
+                    style={{
+                      textAlign: "end",
+                      fontWeight: "bold",
+                      border: "1px solid black",
+                      padding: "4px",
+                    }}
+                  >
+                    {totalExpenses.toFixed(2)}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colSpan="3"
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      border: "1px solid black",
+                      padding: "4px",
+                    }}
+                  >
+                    Net Balance
+                  </td>
+                  <td
+                    style={{
+                      textAlign: "end",
+                      fontWeight: "bold",
+                      border: "1px solid black",
+                      padding: "4px",
+                    }}
+                  >
+                    {netBalance.toFixed(2)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        {/* Footer to show totals */}
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginTop: "20px",
-            fontSize: "0.9rem",
-          }}
-        >
-          <tbody>
-            <tr>
-              <td
-                colSpan="3"
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  border: "1px solid black",
-                  padding: "4px",
-                }}
-              >
-                Total Income
-              </td>
-              <td
-                style={{
-                  textAlign: "end",
-                  fontWeight: "bold",
-                  border: "1px solid black",
-                  padding: "4px",
-                }}
-              >
-                Rs.{totalIncome.toFixed(2)}
-              </td>
-              <td
-                colSpan="2"
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  border: "1px solid black",
-                  padding: "4px",
-                }}
-              >
-                Total Expenses
-              </td>
-              <td
-                style={{
-                  textAlign: "end",
-                  fontWeight: "bold",
-                  border: "1px solid black",
-                  padding: "4px",
-                }}
-              >
-                Rs.{totalExpenses.toFixed(2)}
-              </td>
-            </tr>
-            <tr>
-              <td
-                colSpan="3"
-                style={{
-                  textAlign: "center",
-                  fontWeight: "bold",
-                  border: "1px solid black",
-                  padding: "4px",
-                }}
-              >
-                Net Balance
-              </td>
-              <td
-                style={{
-                  textAlign: "end",
-                  fontWeight: "bold",
-                  border: "1px solid black",
-                  padding: "4px",
-                }}
-              >
-                Rs.{netBalance.toFixed(2)}
-              </td>
-              <td colSpan="2" style={{ border: "none" }}></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   );
