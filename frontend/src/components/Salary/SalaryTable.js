@@ -1,11 +1,11 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import NavigationCard from "./components/NavigationCard"; // Adjust path if needed
-import SalaryDetails from "./components/SalaryDetails"; // Adjust path if needed
-import StackedChart from "./components/StackedChart";
-import PieChart from "./components/PieChart";
-import EmpTable from "./components/EmpTable";
-import CategorizeEmployees from "./components/CategorizeEmp";
+import NavigationCard from "./components/SalaryTable/NavigationCard"; // Adjust path if needed
+import SalaryDetails from "./components/SalaryTable/SalaryDetails"; // Adjust path if needed
+import StackedChart from "./components/SalaryTable/StackedChart";
+import PieChart from "./components/SalaryTable/PieChart";
+import EmpTable from "./components/SalaryTable/EmpTable";
+import CategorizeEmployees from "./components/SalaryTable/CategorizeEmp";
 
 const Dashboard = () => {
   // Sample user data for UserDetails
