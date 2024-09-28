@@ -17,7 +17,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                 {formattedIncomeDate}
                 {income && <div className="mt-1"><span className="badge bg-success">{income.cashType}</span></div>}
             </td>
-            <td className="text-wrap">{income?.description || ""}</td> {/* Added text-wrap for word wrapping */}
+            <td className="text-wrap">{income?.description || ""}</td>
             <td>Rs.{income ? income.amount.toFixed(2) : ""}</td>
             <td>
                 {income && (
@@ -49,7 +49,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                     </div>
                 )}
             </td>
-            <td className="text-wrap">{expense?.description || ""}</td> {/* Added text-wrap for word wrapping */}
+            <td className="text-wrap">{expense?.description || ""}</td>
             <td>Rs.{expense ? expense.amount.toFixed(2) : ""}</td>
             <td>
                 {expense && (
@@ -198,6 +198,14 @@ function IncomeAndOutgoingTable() {
     // Calculate Total Expenses
     const totalExpenses = [...regularExpenses, ...pettyCashExpenses].reduce((total, expense) => total + expense.amount, 0);
 
+    // Calculate Net Balance
+    const netBalance = totalIncome - totalExpenses;
+
+    // Determine class and message for the total row based on netBalance
+    const isNetLoss = netBalance <= 0;
+    const totalRowClass = isNetLoss ? "table-danger" : "table-success";
+    const totalRowMessage = isNetLoss ? "COMPANY LOST" : "COMPANY PROFIT";
+
     return (
         <div className="container">
             <h1>Income and Expense Table</h1>
@@ -217,12 +225,16 @@ function IncomeAndOutgoingTable() {
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>
-                    <tfoot>
+                    <tfoot className={totalRowClass}>
                         <tr>
                             <td colSpan="3" className="text-center"><strong>Total Income</strong></td>
                             <td className="text-end"><strong>Rs.{totalIncome.toFixed(2)}</strong></td>
                             <td colSpan="3" className="text-center"><strong>Total Expenses</strong></td>
                             <td className="text-end"><strong>Rs.{totalExpenses.toFixed(2)}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colSpan="7" className="text-center" style={{ fontSize: "1.5rem" }}><strong>{totalRowMessage}</strong></td>
+                            <td className="text-end" style={{ fontSize: "1.5rem" }}><strong>Rs.{netBalance.toFixed(2)}</strong></td>
                         </tr>
                     </tfoot>
                 </table>
