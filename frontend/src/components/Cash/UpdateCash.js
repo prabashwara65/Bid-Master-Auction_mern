@@ -65,66 +65,73 @@ function UpdateCash() {
             <Nav />
             <div className="container vh-100 d-flex align-items-center justify-content-center">
                 <div className="col-lg-6">
-                    <h1 className="mb-4 text-center">Update Cash</h1>
-                    <form onSubmit={handleSubmit} className="p-4 shadow rounded bg-white">
-                        <div className="mb-3">
-                            <label className="form-label">Cash Type</label>
-                            {["Income", "Expense", "Peti Cash"].map((type) => (
-                                <div className="form-check" key={type}>
+                    <div className="card shadow border-0 rounded">
+                        <div className="card-header text-center bg-primary text-white">
+                            <h2 className="mb-0">Update Cash</h2>
+                        </div>
+                        <div className="card-body">
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label className="form-label">Cash Type</label>
+                                    {["Income", "Expense", "Peti Cash"].map((type) => (
+                                        <div className="form-check" key={type}>
+                                            <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                value={type}
+                                                checked={cashType === type}
+                                                onChange={(e) => setCashType(e.target.value)}
+                                                required
+                                            />
+                                            <label className="form-check-label">{type}</label>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="mb-3">
+                                    <label className="form-label">Date</label>
                                     <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        value={type}
-                                        checked={cashType === type}
-                                        onChange={(e) => setCashType(e.target.value)}
+                                        type="date"
+                                        className="form-control"
+                                        value={date}
+                                        onChange={(e) => setDate(e.target.value)}
                                         required
                                     />
-                                    <label className="form-check-label">{type}</label>
                                 </div>
-                            ))}
-                        </div>
 
-                        <div className="mb-3">
-                            <label className="form-label">Date</label>
-                            <input
-                                type="date"
-                                className="form-control"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
-                                required
-                            />
-                        </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Description</label>
+                                    <textarea
+                                        className="form-control"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        required
+                                        rows="3"
+                                    ></textarea>
+                                </div>
 
-                        <div className="mb-3">
-                            <label className="form-label">Description</label>
-                            <textarea
-                                className="form-control"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            ></textarea>
-                        </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Amount</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={amount}
+                                        onChange={handleAmountChange}
+                                        required
+                                    />
+                                </div>
 
-                        <div className="mb-3">
-                            <label className="form-label">Amount</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={amount}
-                                onChange={handleAmountChange}
-                                required
-                            />
+                                <div className="d-flex justify-content-between">
+                                    <button type="submit" className="btn btn-primary me-2">
+                                        Update Cash
+                                    </button>
+                                    <button type="button" onClick={handleCancel} className="btn btn-secondary">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-
-                        <div className="d-flex justify-content-end">
-                            <button type="submit" className="btn btn-primary me-2">
-                                Update Cash
-                            </button>
-                            <button type="button" onClick={handleCancel} className="btn btn-secondary">
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </>

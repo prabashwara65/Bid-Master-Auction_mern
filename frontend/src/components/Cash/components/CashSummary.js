@@ -82,7 +82,7 @@ function CashSummary() {
           className="btn btn-secondary w-100 mt-2"
           onClick={handleNavigateToReport} // Update the button click handler
         >
-          Go to Cash Report
+          Go to Download Report
         </button>
       </div>
       <div className="pt-1">
