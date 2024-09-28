@@ -38,7 +38,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                 )}
             </td>
 
-            {/* Expenses and Petty Cash */}
+            {/* Expenses */}
             <td>
                 {formattedExpenseDate}
                 {expense && (
@@ -127,23 +127,70 @@ function IncomeAndOutgoingTable() {
         }
     };
 
-    // Create rows by pairing incomes and expenses
-    const rows = [];
-    const maxLength = Math.max(incomes.length, expenses.length);
+    // Filter incomes and expenses
+    const operatingIncomes = incomes.filter(income => 
+        ["Sales Revenue", "Recurring Revenue", "Rental Income", "Royalties"].includes(income.description)
+    );
 
-    for (let i = 0; i < maxLength; i++) {
+    const nonOperatingIncomes = incomes.filter(income => 
+        ["Investment Income", "Grants and Subsidies", "Other Income", "Sponsorship and Advertising Revenue"].includes(income.description)
+    );
+
+    const regularExpenses = expenses.filter(expense => 
+        ["Fixed Expenses", "Variable Expenses", "Operational Expenses"].includes(expense.description)
+    );
+
+    const pettyCashExpenses = expenses.filter(expense => 
+        ["Office Supplies", "Employee Reimbursements", "Miscellaneous Expenses"].includes(expense.description)
+    );
+
+    const rows = [];
+
+    // Add Operating Incomes heading
+    rows.push(
+        <tr key="operating-heading">
+            <td colSpan="4" className="table-primary text-center">Operating Incomes</td>
+            <td colSpan="4" className="table-primary text-center">Regular Expenses</td>
+        </tr>
+    );
+
+    // Add Operating Income rows
+    operatingIncomes.forEach((income, index) => {
         rows.push(
             <CashRow
-                key={i}
-                income={incomes[i] || null}
-                expense={expenses[i] || null}
+                key={`operating-income-${index}`}
+                income={income}
+                expense={regularExpenses[index] || null} // Pair with Regular Expenses
                 onEditIncome={handleEditIncome}
                 onEditExpense={handleEditExpense}
                 onDeleteIncome={handleDeleteIncome}
                 onDeleteExpense={handleDeleteExpense}
             />
         );
-    }
+    });
+
+    // Add Non-Operating Incomes heading
+    rows.push(
+        <tr key="non-operating-heading">
+            <td colSpan="4" className="table-secondary text-center">Non-Operating Incomes</td>
+            <td colSpan="4" className="table-secondary text-center">Petty Cash Expenses</td>
+        </tr>
+    );
+
+    // Add Non-Operating Income rows
+    nonOperatingIncomes.forEach((income, index) => {
+        rows.push(
+            <CashRow
+                key={`non-operating-income-${index}`}
+                income={income}
+                expense={pettyCashExpenses[index] || null} // Pair with Petty Cash Expenses
+                onEditIncome={handleEditIncome}
+                onEditExpense={handleEditExpense}
+                onDeleteIncome={handleDeleteIncome}
+                onDeleteExpense={handleDeleteExpense}
+            />
+        );
+    });
 
     return (
         <div className="container">
@@ -154,13 +201,13 @@ function IncomeAndOutgoingTable() {
                     <thead className="thead-dark">
                         <tr>
                             <th>Date (Income)</th>
-                            <th style={{ width: "20%" }}>Description (Income)</th> {/* Increased width */}
+                            <th style={{ width: "20%" }}>Description (Income)</th>
                             <th>Amount (Income)</th>
-                            <th>Action (Income)</th> {/* Action column for income */}
+                            <th>Action (Income)</th>
                             <th>Date (Expense)</th>
-                            <th style={{ width: "20%" }}>Description (Expense)</th> {/* Increased width */}
+                            <th style={{ width: "20%" }}>Description (Expense)</th>
                             <th>Amount (Expense)</th>
-                            <th>Action (Expense)</th> {/* Action column for expenses */}
+                            <th>Action (Expense)</th>
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>
