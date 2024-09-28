@@ -204,10 +204,10 @@ function PDFPrint() {
                 </tr>
               </thead>
               <tbody>
-                {filteredIncomes.map((income, index) => (
+                {Array.from({ length: Math.max(filteredIncomes.length, filteredExpenses.length) }, (_, index) => (
                   <CashRow
-                    key={`income-${index}`}
-                    income={income}
+                    key={`row-${index}`}
+                    income={filteredIncomes[index] || null}
                     expense={filteredExpenses[index] || null}
                   />
                 ))}
