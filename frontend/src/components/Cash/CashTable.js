@@ -2,8 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavigationCard from "../Salary/components/SalaryTable/NavigationCard"; // Adjust path if needed
 import SalaryDetails from "../Salary/components/SalaryTable/SalaryDetails"; // Adjust path if needed
-import IncomesCash from './components/IncomeCash'
-import OutgoingCash from './components/OutgoingCash'
+import IncomeAndOutgoingTable from './components/IncomeAndOutgoingTable'
 import LineChartCast from './components/LineChartCash'
 import CashSummary from './components/CashSummary'
 
@@ -34,18 +33,11 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="col-md-6 mt-3">
+        <div className="col-md-15">
           <div className="card mb-2" >
-            <IncomesCash />
+            <IncomeAndOutgoingTable />
           </div>
         </div>
-
-        <div className="col-md-6 mt-3">
-          <div className="card mb-2" >
-            <OutgoingCash />
-          </div>
-        </div>
-
         
       </div>
     </div>
