@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import jsPDF from "jspdf"; // jsPDF for generating PDFs
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
@@ -47,19 +46,9 @@ function CashSummary() {
     });
   }, []);
 
-  // Generate PDF Report for the summary section
-  const generatePDFReport = () => {
-    const doc = new jsPDF();
-    const today = new Date().toISOString().split("T")[0];
-
-    doc.text("Monthly Cash Summary Report", 10, 10);
-    doc.text(`Date: ${today}`, 10, 20);
-    doc.text(`Total Income: Rs.${totalIncome.toFixed(2)}`, 10, 30);
-    doc.text(`Total Expenses: Rs.${totalExpenses.toFixed(2)}`, 10, 40);
-    doc.text(`Total Peti Cash: Rs.${totalPetiCash.toFixed(2)}`, 10, 50);
-    doc.text(`Net Balance: Rs.${netBalance.toFixed(2)}`, 10, 60);
-
-    doc.save(`cash-summary-report-${today}.pdf`);
+  // Handle navigation to cash report
+  const handleNavigateToReport = () => {
+    navigate("/cashReport"); // Use navigate to change the route
   };
 
   // Handle Add Cash navigation
@@ -69,7 +58,8 @@ function CashSummary() {
 
   return (
     <div className="container ">
-      <h2 className="text-center ">Cash Summary</h2><br/>
+      <h2 className="text-center ">Cash Summary</h2>
+      <br />
       <div className="border">
         <div className="d-flex justify-content-between text-start">
           <strong>Total Income -</strong>
@@ -90,9 +80,9 @@ function CashSummary() {
         </div>
         <button
           className="btn btn-secondary w-100 mt-2"
-          onClick={generatePDFReport}
+          onClick={handleNavigateToReport} // Update the button click handler
         >
-          Download Monthly Report
+          Go to Download Report
         </button>
       </div>
       <div className="pt-1">

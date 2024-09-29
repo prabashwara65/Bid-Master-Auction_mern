@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"; // Importing useNavigate for rou
 
 const URL = "http://localhost:8070/cash";
 
-// Row component for displaying income and expenses data with Update and Delete buttons
 const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome, onDeleteExpense }) => {
     const formattedIncomeDate = income ? new Date(income.date).toISOString().split("T")[0] : "";
     const formattedExpenseDate = expense ? new Date(expense.date).toISOString().split("T")[0] : "";
@@ -71,7 +70,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
             </td>
         </tr>
     );
-};
+}
 
 // Fetch the cash data from API
 const fetchHandler = async () => {
@@ -81,17 +80,15 @@ const fetchHandler = async () => {
 function IncomeAndOutgoingTable() {
     const [incomes, setIncomes] = useState([]);
     const [expenses, setExpenses] = useState([]);
+    const [selectedMonth, setSelectedMonth] = useState(""); // State for selected month
     const navigate = useNavigate();
 
     // Fetch and filter the data
     useEffect(() => {
         fetchHandler().then((data) => {
-            const allIncomes = data.cash.filter((item) => item.cashType === "Income");
-            const allExpenses = data.cash.filter(
-                (item) => item.cashType === "Expense" || item.cashType === "Peti Cash"
-            );
-            setIncomes(allIncomes);
-            setExpenses(allExpenses);
+            console.log("Fetched Data:", data); // Debug log
+            setIncomes(data.cash.filter((item) => item.cashType === "Income"));
+            setExpenses(data.cash.filter((item) => item.cashType === "Expense" || item.cashType === "Peti Cash"));
         });
     }, []);
 
@@ -127,20 +124,31 @@ function IncomeAndOutgoingTable() {
         }
     };
 
-    // Filter incomes and expenses
-    const operatingIncomes = incomes.filter(income => 
+    // Filter data based on selected month
+    const filterByMonth = (data) => {
+        if (!selectedMonth) return data;
+        return data.filter((item) => {
+            const itemMonth = new Date(item.date).getMonth() + 1; // Get month from date
+            return itemMonth === parseInt(selectedMonth);
+        });
+    };
+
+    const filteredIncomes = filterByMonth(incomes);
+    const filteredExpenses = filterByMonth(expenses);
+
+    const operatingIncomes = filteredIncomes.filter(income => 
         ["Sales Revenue", "Recurring Revenue", "Rental Income", "Royalties"].includes(income.description)
     );
 
-    const nonOperatingIncomes = incomes.filter(income => 
+    const nonOperatingIncomes = filteredIncomes.filter(income => 
         ["Investment Income", "Grants and Subsidies", "Other Income", "Sponsorship and Advertising Revenue"].includes(income.description)
     );
 
-    const regularExpenses = expenses.filter(expense => 
+    const regularExpenses = filteredExpenses.filter(expense => 
         ["Fixed Expenses", "Variable Expenses", "Operational Expenses"].includes(expense.description)
     );
 
-    const pettyCashExpenses = expenses.filter(expense => 
+    const pettyCashExpenses = filteredExpenses.filter(expense => 
         ["Office Supplies", "Employee Reimbursements", "Miscellaneous Expenses"].includes(expense.description)
     );
 
@@ -154,20 +162,26 @@ function IncomeAndOutgoingTable() {
         </tr>
     );
 
+    // Calculate the maximum number of rows for Operating Incomes and Regular Expenses
+    const maxOperatingRows = Math.max(operatingIncomes.length, regularExpenses.length);
+
     // Add Operating Income rows
-    operatingIncomes.forEach((income, index) => {
+    for (let index = 0; index < maxOperatingRows; index++) {
+        const income = operatingIncomes[index] || null; // Get income or null if not available
+        const expense = regularExpenses[index] || null; // Get expense or null if not available
+
         rows.push(
             <CashRow
-                key={`operating-income-${index}`}
+                key={`operating-row-${index}`}
                 income={income}
-                expense={regularExpenses[index] || null} // Pair with Regular Expenses
+                expense={expense}
                 onEditIncome={handleEditIncome}
                 onEditExpense={handleEditExpense}
                 onDeleteIncome={handleDeleteIncome}
                 onDeleteExpense={handleDeleteExpense}
             />
         );
-    });
+    }
 
     // Add Non-Operating Incomes heading
     rows.push(
@@ -177,68 +191,104 @@ function IncomeAndOutgoingTable() {
         </tr>
     );
 
+    // Calculate the maximum number of rows for Non-Operating Incomes and Petty Cash Expenses
+    const maxNonOperatingRows = Math.max(nonOperatingIncomes.length, pettyCashExpenses.length);
+
     // Add Non-Operating Income rows
-    nonOperatingIncomes.forEach((income, index) => {
+    for (let index = 0; index < maxNonOperatingRows; index++) {
+        const income = nonOperatingIncomes[index] || null; // Get income or null if not available
+        const expense = pettyCashExpenses[index] || null; // Get expense or null if not available
+
         rows.push(
             <CashRow
-                key={`non-operating-income-${index}`}
+                key={`non-operating-row-${index}`}
                 income={income}
-                expense={pettyCashExpenses[index] || null} // Pair with Petty Cash Expenses
+                expense={expense}
                 onEditIncome={handleEditIncome}
                 onEditExpense={handleEditExpense}
                 onDeleteIncome={handleDeleteIncome}
                 onDeleteExpense={handleDeleteExpense}
             />
         );
-    });
+    }
 
-    // Calculate Total Income
-    const totalIncome = [...operatingIncomes, ...nonOperatingIncomes].reduce((total, income) => total + income.amount, 0);
+    // Calculate Total Income for the selected month
+    const totalIncome = filteredIncomes.reduce((total, income) => total + income.amount, 0);
 
-    // Calculate Total Expenses
-    const totalExpenses = [...regularExpenses, ...pettyCashExpenses].reduce((total, expense) => total + expense.amount, 0);
+    // Calculate Total Expenses for the selected month
+    const totalExpenses = filteredExpenses.reduce((total, expense) => total + expense.amount, 0);
 
-    // Calculate Net Balance
+    // Calculate Net Balance for the selected month
     const netBalance = totalIncome - totalExpenses;
 
-    // Determine class and message for the total row based on netBalance
-    const isNetLoss = netBalance <= 0;
-    const totalRowClass = isNetLoss ? "table-danger" : "table-success";
-    const totalRowMessage = isNetLoss ? "COMPANY LOST" : "COMPANY PROFIT";
+    // Determine class for the total row based on netBalance
+    let totalRowClass = "";
+    if (netBalance > 0) {
+        totalRowClass = "table-success"; // Green for profit
+    } else if (netBalance < 0) {
+        totalRowClass = "table-danger"; // Red for loss
+    }
+
+    // Generate Month Options
+    const months = [
+        { value: "1", label: "January" },
+        { value: "2", label: "February" },
+        { value: "3", label: "March" },
+        { value: "4", label: "April" },
+        { value: "5", label: "May" },
+        { value: "6", label: "June" },
+        { value: "7", label: "July" },
+        { value: "8", label: "August" },
+        { value: "9", label: "September" },
+        { value: "10", label: "October" },
+        { value: "11", label: "November" },
+        { value: "12", label: "December" },
+    ];
 
     return (
-        <div className="container">
-            <h1>Income and Expense Table</h1>
-            <hr />
-            <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto" }}>
-                <table className="table table-striped table-bordered">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Date (Income)</th>
-                            <th style={{ width: "20%" }}>Description (Income)</th>
-                            <th>Amount (Income)</th>
-                            <th>Action (Income)</th>
-                            <th>Date (Expense)</th>
-                            <th style={{ width: "20%" }}>Description (Expense)</th>
-                            <th>Amount (Expense)</th>
-                            <th>Action (Expense)</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                </table>
+        <div>
+            <div className="mb-3">
+                <label htmlFor="monthSelect" className="form-label">Select Month</label>
+                <select
+                    id="monthSelect"
+                    className="form-select"
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(e.target.value)}
+                >
+                    <option value="">All Months</option>
+                    {months.map((month) => (
+                        <option key={month.value} value={month.value}>{month.label}</option>
+                    ))}
+                </select>
             </div>
-            {/* Footer to show totals */}
-            <table className={`table ${totalRowClass}`}>
-                <tbody>
+
+            <table className="table table-bordered">
+                <thead>
                     <tr>
-                        <td colSpan="3" className="text-center"><strong>Total Income</strong></td>
-                        <td className="text-end"><strong>Rs.{totalIncome.toFixed(2)}</strong></td>
-                        <td colSpan="3" className="text-center"><strong>Total Expenses</strong></td>
-                        <td className="text-end"><strong>Rs.{totalExpenses.toFixed(2)}</strong></td>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
                     </tr>
-                    <tr>
-                        <td colSpan="7" className="text-center" style={{ fontSize: "1.5rem" }}><strong>{totalRowMessage}</strong></td>
-                        <td className="text-end" style={{ fontSize: "1.5rem" }}><strong>Rs.{netBalance.toFixed(2)}</strong></td>
+                </thead>
+                <tbody>
+                    {rows}
+                    <tr className={totalRowClass}>
+                        <td colSpan="2" className="text-center">Total Income:</td>
+                        <td>{totalIncome.toFixed(2)}</td>
+                        <td></td>
+                        <td colSpan="2" className="text-center">Total Expenses:</td>
+                        <td>{totalExpenses.toFixed(2)}</td>
+                        <td></td>
+                    </tr>
+                    <tr className={totalRowClass}>
+                        <td colSpan="6" className="text-right">Net Balance:</td>
+                        <td>{netBalance.toFixed(2)}</td>
+                        <td colSpan="4"></td>
                     </tr>
                 </tbody>
             </table>

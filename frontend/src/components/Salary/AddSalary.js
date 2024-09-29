@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Nav from '../Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './AddSalary.css'; // External CSS file for custom styling
 
 function AddSalary() {
   const [basicSalary, setBasicSalary] = useState('');
@@ -55,18 +54,22 @@ function AddSalary() {
     setter(value);
   };
 
+  const handleBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
   return (
     <>
       <Nav />
       <div className="container mt-5">
         <div className="row justify-content-center">
           <div className="col-lg-6">
-            <div className="card shadow-sm custom-card">
+            <div className="card shadow-sm">
               <div className="card-header text-center bg-primary text-white py-3">
                 <h2 className="mb-0">Add Salary</h2>
               </div>
               <div className="card-body">
-                <form onSubmit={handleSubmit} className="custom-form">
+                <form onSubmit={handleSubmit}>
                   <div className="mb-4 input-group">
                     <span className="input-group-text"><i className="fas fa-money-bill-wave"></i></span>
                     <input
@@ -125,8 +128,11 @@ function AddSalary() {
                     <h6>{totalSalary.toFixed(2)}</h6>
                   </div>
 
-                  <button type="submit" className="btn btn-success w-100 py-2">
+                  <button type="submit" className="btn btn-success w-100 py-2 mb-2">
                     <i className="fas fa-plus-circle me-2"></i>Add Salary
+                  </button>
+                  <button type="button" className="btn btn-secondary w-100 py-2" onClick={handleBack}>
+                    <i className="fas fa-arrow-left me-2"></i>Back
                   </button>
                 </form>
               </div>
