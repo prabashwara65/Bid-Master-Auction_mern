@@ -11,6 +11,31 @@ function UpdateCash() {
     const [cashType, setCashType] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
+    const [error, setError] = useState(''); // State for error message
+
+    // Valid description options for different cash types
+    const validIncomeDescriptions = [
+        "Sales Revenue",
+        "Recurring Revenue",
+        "Rental Income",
+        "Royalties",
+        "Investment Income",
+        "Grants and Subsidies",
+        "Other Income",
+        "Sponsorship and Advertising Revenue",
+    ];
+
+    const validExpenseDescriptions = [
+        "Fixed Expenses",
+        "Variable Expenses",
+        "Operational Expenses",
+    ];
+
+    const validPetiCashDescriptions = [
+        "Office Supplies",
+        "Employee Reimbursements",
+        "Miscellaneous Expenses",
+    ];
 
     useEffect(() => {
         const fetchCashData = async () => {
@@ -38,16 +63,51 @@ function UpdateCash() {
             return;
         }
 
+        // Trim the description and remove trailing whitespace
+        const trimmedDescription = description.trim();
+        setError(""); // Reset error message
+
+        // Validate description based on cash type
+        if (cashType === "Income") {
+            const isValid = validIncomeDescriptions.some(desc => 
+                desc.toLowerCase().startsWith(trimmedDescription.toLowerCase())
+            );
+
+            if (!isValid) {
+                setError("Invalid description for Income. Please enter a valid option.");
+                return;
+            }
+        } else if (cashType === "Expense") {
+            const isValid = validExpenseDescriptions.some(desc => 
+                desc.toLowerCase().startsWith(trimmedDescription.toLowerCase())
+            );
+
+            if (!isValid) {
+                setError("Invalid description for Expense. Please enter a valid option.");
+                return;
+            }
+        } else if (cashType === "Peti Cash") {
+            const isValid = validPetiCashDescriptions.some(desc => 
+                desc.toLowerCase().startsWith(trimmedDescription.toLowerCase())
+            );
+
+            if (!isValid) {
+                setError("Invalid description for Peti Cash. Please enter a valid option.");
+                return;
+            }
+        }
+
         try {
             await axios.put(`http://localhost:8070/cash/${id}`, {
                 amount: parseFloat(amount),
                 cashType,
                 date,
-                description,
+                description: trimmedDescription, // Use the trimmed description
             });
             navigate('/cashTable');
         } catch (error) {
             console.error('Failed to update cash record:', error);
+            setError("Failed to update the record. Please try again.");
         }
     };
 
@@ -58,6 +118,12 @@ function UpdateCash() {
     const handleAmountChange = (e) => {
         const value = e.target.value.replace(/[^0-9.]/g, ''); // Allow only numbers and decimal point
         setAmount(value);
+    };
+
+    const handleDescriptionChange = (e) => {
+        const value = e.target.value;
+        setDescription(value); // Update the description as user types
+        setError(""); // Reset error message
     };
 
     return (
@@ -104,10 +170,11 @@ function UpdateCash() {
                                     <textarea
                                         className="form-control"
                                         value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        onChange={handleDescriptionChange} // Call the new handler
                                         required
                                         rows="3"
                                     ></textarea>
+                                    {error && <div className="text-danger mt-2">{error}</div>} {/* Show error message */}
                                 </div>
 
                                 <div className="mb-3">

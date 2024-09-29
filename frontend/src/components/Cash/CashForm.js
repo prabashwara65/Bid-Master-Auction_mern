@@ -45,12 +45,15 @@ function CashForm() {
         // Reset error message before submitting
         setError("");
 
+        // Trim the description and remove trailing whitespace
+        const trimmedDescription = description.trim();
+
         try {
             await axios.post("http://localhost:8070/cash/", {
                 amount: parseFloat(amount),
                 cashType,
                 date,
-                description,
+                description: trimmedDescription, // Use the trimmed description
             });
             navigate("/cashTable");
         } catch (error) {
