@@ -63,7 +63,6 @@ function CashForm() {
     const handleDescriptionChange = (e) => {
         const value = e.target.value;
         setDescription(value);
-        setError("");
 
         const trimmedValue = value.trim();
         if (cashType === "Income") {
@@ -71,7 +70,6 @@ function CashForm() {
                 desc.toLowerCase().startsWith(trimmedValue.toLowerCase())
             );
             if (!isValid && trimmedValue.length > 0) {
-                setError("Invalid description for Income. Please enter a valid option.");
                 setDescription("");
             }
         } else if (cashType === "Expense") {
@@ -79,7 +77,6 @@ function CashForm() {
                 desc.toLowerCase().startsWith(trimmedValue.toLowerCase())
             );
             if (!isValid && trimmedValue.length > 0) {
-                setError("Invalid description for Expense. Please enter a valid option.");
                 setDescription("");
             }
         }
