@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import PetiCashForm from "./forms/PettiCashForm"; // Ensure this file is in the same directory
-import CashForm from "./forms/incomeExpenceForm"; // Ensure this file is in the same directory
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import PetiCashForm from "./forms/PettiCashForm"; 
+import CashForm from "./forms/incomeExpenceForm"; 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function CashManagement() {
     const [activeTab, setActiveTab] = useState("cash"); // Default to Cash form
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
+    };
+
+    const handleBackClick = () => {
+        navigate("/cashTable"); // Navigate to /cashTable when back button is clicked
     };
 
     return (
@@ -18,6 +24,14 @@ function CashManagement() {
                         <h2 className="mb-0">Cash Management</h2>
                     </div>
                     <div className="card-body">
+                        {/* Back button */}
+                        <button 
+                            className="btn btn-outline-secondary mb-3" 
+                            onClick={handleBackClick}
+                        >
+                            Back to Cash Table
+                        </button>
+
                         {/* Tabs for switching between forms */}
                         <ul className="nav nav-tabs mb-4 ">
                             <li className="nav-item ">
