@@ -47,21 +47,20 @@ function PetiCashForm() {
     };
 
     const handleAmountChange = (e) => {
-        const value = e.target.value.replace(/[^0-9.]/g, ''); // Allow only numbers and decimal point
+        // Allow only numbers and decimal point
+        const value = e.target.value.replace(/[^0-9.]/g, ''); 
         setAmount(value);
     };
 
     const handleDescriptionChange = (e) => {
         const value = e.target.value;
         setDescription(value);
-        setError("");
 
         const trimmedValue = value.trim();
         const isValid = validPetiCashDescriptions.some(desc =>
             desc.toLowerCase().startsWith(trimmedValue.toLowerCase())
         );
         if (!isValid && trimmedValue.length > 0) {
-            setError("Invalid description for Peti Cash. Please enter a valid option.");
             setDescription("");
         }
     };
