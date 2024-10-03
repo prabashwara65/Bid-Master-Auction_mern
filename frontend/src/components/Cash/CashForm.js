@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import PetiCashForm from "./PettiCashForm";
-import CashForm from "./incomeExpenceReport";
+import PetiCashForm from "./forms/PettiCashForm"; // Ensure this file is in the same directory
+import CashForm from "./forms/incomeExpenceForm"; // Ensure this file is in the same directory
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function CashManagement() {
@@ -12,16 +11,16 @@ function CashManagement() {
     };
 
     return (
-        <div className="container vh-80  d-flex align-items-center justify-content-center ">
-            <div className="col-lg-8">
+        <div className="container vh-80 d-flex align-items-center justify-content-center">
+            <div className="col-lg-12"> {/* Increased width here */}
                 <div className="card shadow border-0 rounded">
-                    <div className="card-header bg-dark text-white text-center">
+                    <div className="card-header bg-gray text-white text-center">
                         <h2 className="mb-0">Cash Management</h2>
                     </div>
                     <div className="card-body">
                         {/* Tabs for switching between forms */}
-                        <ul className="nav nav-tabs mb-4">
-                            <li className="nav-item">
+                        <ul className="nav nav-tabs mb-4 ">
+                            <li className="nav-item ">
                                 <button
                                     className={`nav-link ${activeTab === "cash" ? "active" : ""}`}
                                     onClick={() => handleTabChange("cash")}
