@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Nav from '../Nav'
 
 
 export default  function UpdateSalary() {
@@ -74,7 +73,6 @@ export default  function UpdateSalary() {
 
   return (
     <>
-      <Nav />
       <div className="container mt-5">
         <h1>Update Salary</h1>
         <form onSubmit={handleSubmit}>
