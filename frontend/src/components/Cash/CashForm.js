@@ -1,36 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PetiCashForm from "./PettiCashForm";
+import CashForm from "./incomeExpenceReport";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function CashOptions() {
-    const navigate = useNavigate();
+function CashManagement() {
+    const [activeTab, setActiveTab] = useState("cash"); // Default to Cash form
 
-    // Navigate to Income/Expense form
-    const handleIncomeExpenseClick = () => {
-        navigate("/cashForm");
-    };
-
-    // Navigate to Peti Cash form
-    const handlePetiCashClick = () => {
-        navigate("/petiCashForm");
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
     };
 
     return (
-        <div className="container vh-100 d-flex align-items-center justify-content-center">
-            <div className="row">
-                <div className="col-lg-6 mb-3">
-                    <div className="card shadow border-0 rounded" onClick={handleIncomeExpenseClick} style={{ cursor: 'pointer' }}>
-                        <div className="card-body text-center bg-success text-white">
-                            <h3>Income/Expense</h3>
-                            <p className="card-text">Manage all Income and Expense records here.</p>
-                        </div>
+        <div className="container vh-80  d-flex align-items-center justify-content-center ">
+            <div className="col-lg-8">
+                <div className="card shadow border-0 rounded">
+                    <div className="card-header bg-dark text-white text-center">
+                        <h2 className="mb-0">Cash Management</h2>
                     </div>
-                </div>
-                <div className="col-lg-6 mb-3">
-                    <div className="card shadow border-0 rounded" onClick={handlePetiCashClick} style={{ cursor: 'pointer' }}>
-                        <div className="card-body text-center bg-warning text-white">
-                            <h3>Peti Cash</h3>
-                            <p className="card-text">Manage Peti Cash transactions here.</p>
+                    <div className="card-body">
+                        {/* Tabs for switching between forms */}
+                        <ul className="nav nav-tabs mb-4">
+                            <li className="nav-item">
+                                <button
+                                    className={`nav-link ${activeTab === "cash" ? "active" : ""}`}
+                                    onClick={() => handleTabChange("cash")}
+                                >
+                                    Income/Expense
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className={`nav-link ${activeTab === "petiCash" ? "active" : ""}`}
+                                    onClick={() => handleTabChange("petiCash")}
+                                >
+                                    Peti Cash
+                                </button>
+                            </li>
+                        </ul>
+
+                        {/* Conditionally render the form based on the active tab */}
+                        <div className="tab-content">
+                            {activeTab === "cash" && (
+                                <div className="tab-pane fade show active">
+                                    <CashForm />
+                                </div>
+                            )}
+                            {activeTab === "petiCash" && (
+                                <div className="tab-pane fade show active">
+                                    <PetiCashForm />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -39,4 +59,4 @@ function CashOptions() {
     );
 }
 
-export default CashOptions;
+export default CashManagement;
