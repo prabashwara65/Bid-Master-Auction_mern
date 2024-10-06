@@ -80,6 +80,12 @@ function UpdatePetiCashForm() {
         }
     };
 
+    // Get today's date in yyyy-MM-dd format
+    const getCurrentDate = () => {
+        const today = new Date();
+        return today.toISOString().split("T")[0];
+    };
+
     return (
         <div className="container vh-100 d-flex align-items-center justify-content-center">
             <div className="col-lg-6">
@@ -97,6 +103,7 @@ function UpdatePetiCashForm() {
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
                                     required
+                                    max={getCurrentDate()}  // Set the max date to today
                                 />
                             </div>
 

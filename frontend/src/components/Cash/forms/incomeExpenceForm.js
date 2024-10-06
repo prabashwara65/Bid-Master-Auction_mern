@@ -82,6 +82,12 @@ function CashForm() {
         }
     };
 
+    // Get today's date in yyyy-MM-dd format
+    const getCurrentDate = () => {
+        const today = new Date();
+        return today.toISOString().split("T")[0];
+    };
+
     return (
         <div className="container vh-100 d-flex align-items-center justify-content-center">
             <div className="col-lg-6">
@@ -108,47 +114,54 @@ function CashForm() {
                                 ))}
                             </div>
 
-                            <div className="mb-3">
-                                <label className="form-label">Date</label>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    value={date}
-                                    onChange={(e) => setDate(e.target.value)}
-                                    required
-                                />
-                            </div>
+                            {cashType && (
+                                <>
+                                    <div className="mb-3">
+                                        <label className="form-label">Date</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            value={date}
+                                            onChange={(e) => setDate(e.target.value)}
+                                            required
+                                            max={getCurrentDate()}  // Set the max date to today
+                                        />
+                                    </div>
 
-                            <div className="mb-3">
-                                <label className="form-label">Description</label>
-                                <textarea
-                                    className="form-control"
-                                    value={description}
-                                    onChange={handleDescriptionChange}
-                                    required
-                                    rows="3"
-                                    placeholder={
-                                        cashType === "Income" ?
-                                            "Possible values: Sales Revenue, Recurring Revenue, Rental Income, Royalties, Investment Income, Grants and Subsidies, Other Income, Sponsorship and Advertising Revenue" :
-                                            "Possible values: Fixed Expenses, Variable Expenses, Operational Expenses"
-                                    }
-                                ></textarea>
-                                {error && <div className="text-danger mt-2">{error}</div>}
-                            </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Description</label>
+                                        <textarea
+                                            className="form-control"
+                                            value={description}
+                                            onChange={handleDescriptionChange}
+                                            required
+                                            rows="3"
+                                            placeholder={
+                                                cashType === "Income" ?
+                                                    "Possible values: Sales Revenue, Recurring Revenue, Rental Income, Royalties, Investment Income, Grants and Subsidies, Other Income, Sponsorship and Advertising Revenue" :
+                                                    "Possible values: Fixed Expenses, Variable Expenses, Operational Expenses"
+                                            }
+                                        ></textarea>
+                                        {error && <div className="text-danger mt-2">{error}</div>}
+                                    </div>
 
-                            <div className="mb-3">
-                                <label className="form-label">Amount</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={amount}
-                                    onChange={handleAmountChange}
-                                    required
-                                />
-                            </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Amount</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={amount}
+                                            onChange={handleAmountChange}
+                                            required
+                                        />
+                                    </div>
+                                </>
+                            )}
+
+                            {!cashType && <div className="text-danger mb-3">Please select a cash type first.</div>}
 
                             <div className="d-flex justify-content-end">
-                                <button type="submit" className="btn btn-success me-2">
+                                <button type="submit" className="btn btn-success me-2" disabled={!cashType}>
                                     <i className="fas fa-plus-circle me-2"></i>Add Cash
                                 </button>
                                 <button type="button" onClick={handleCancel} className="btn btn-secondary">
