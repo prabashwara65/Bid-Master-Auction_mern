@@ -75,7 +75,7 @@ const PieChart = () => {
               data: [
                 data.BasicSalary,
                 data.Bonus,
-                data.OT_Hours * data.OT_Rate, // Total OT Pay
+                data.OT_Hours * data.OT_Rate, 
                 data.OT_Rate,
               ],
               backgroundColor: [

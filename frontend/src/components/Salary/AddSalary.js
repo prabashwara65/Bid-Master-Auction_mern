@@ -54,8 +54,9 @@ function AddSalary() {
     setter(value);
   };
 
+  // Go back to the previous page
   const handleBack = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(-1); 
   };
 
   return (

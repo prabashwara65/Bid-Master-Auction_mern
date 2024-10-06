@@ -88,7 +88,8 @@ function PetiCashForm() {
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
                                     required
-                                    max={getCurrentDate()}  // Set the max date to today
+                                    // Set the max date to today
+                                    max={getCurrentDate()}  
                                 />
                             </div>
 
