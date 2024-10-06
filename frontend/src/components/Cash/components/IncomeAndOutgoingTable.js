@@ -23,7 +23,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                     <div className="d-flex flex-column">
                         <button
                             className="btn btn-warning btn-sm mb-2"
-                            onClick={() => onEditIncome(income._id)}
+                            onClick={() => onEditIncome(income)}
                         >
                             Update
                         </button>
@@ -55,7 +55,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
                     <div className="d-flex flex-column">
                         <button
                             className="btn btn-warning btn-sm mb-2"
-                            onClick={() => onEditExpense(expense._id)}
+                            onClick={() => onEditExpense(expense)}
                         >
                             Update
                         </button>
@@ -70,7 +70,7 @@ const CashRow = ({ income, expense, onEditIncome, onEditExpense, onDeleteIncome,
             </td>
         </tr>
     );
-}
+};
 
 // Fetch the cash data from API
 const fetchHandler = async () => {
@@ -86,20 +86,27 @@ function IncomeAndOutgoingTable() {
     // Fetch and filter the data
     useEffect(() => {
         fetchHandler().then((data) => {
-            console.log("Fetched Data:", data); // Debug log
             setIncomes(data.cash.filter((item) => item.cashType === "Income"));
             setExpenses(data.cash.filter((item) => item.cashType === "Expense" || item.cashType === "Peti Cash"));
         });
     }, []);
 
     // Handle row edit for income
-    const handleEditIncome = (id) => {
-        navigate(`/updateCash/${id}`); // Navigate to the update page with the income id
+    const handleEditIncome = (income) => {
+        if (income.cashType === "Peti Cash") {
+            navigate(`/UpdatePetiCashForm/${income._id}`); // Navigate to the update page for Peti Cash
+        } else {
+            navigate(`/UpdateCashForm/${income._id}`); // Navigate to the update page for regular income
+        }
     };
 
     // Handle row edit for expense
-    const handleEditExpense = (id) => {
-        navigate(`/updateCash/${id}`); // Navigate to the update page with the expense id
+    const handleEditExpense = (expense) => {
+        if (expense.cashType === "Peti Cash") {
+            navigate(`/UpdatePetiCashForm/${expense._id}`); // Navigate to the update page for Peti Cash
+        } else {
+            navigate(`/UpdateCashForm/${expense._id}`); // Navigate to the update page for regular expense
+        }
     };
 
     // Handle row deletion for income
@@ -229,41 +236,38 @@ function IncomeAndOutgoingTable() {
         totalRowClass = "table-danger"; // Red for loss
     }
 
-    // Generate Month Options
-    const months = [
-        { value: "1", label: "January" },
-        { value: "2", label: "February" },
-        { value: "3", label: "March" },
-        { value: "4", label: "April" },
-        { value: "5", label: "May" },
-        { value: "6", label: "June" },
-        { value: "7", label: "July" },
-        { value: "8", label: "August" },
-        { value: "9", label: "September" },
-        { value: "10", label: "October" },
-        { value: "11", label: "November" },
-        { value: "12", label: "December" },
-    ];
+    // Handle month selection from dropdown
+    const handleMonthChange = (event) => {
+        setSelectedMonth(event.target.value);
+    };
 
     return (
-        <div>
-            <div className="mb-3">
-                <label htmlFor="monthSelect" className="form-label">Select Month</label>
-                <select
-                    id="monthSelect"
-                    className="form-select"
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                >
-                    <option value="">All Months</option>
-                    {months.map((month) => (
-                        <option key={month.value} value={month.value}>{month.label}</option>
-                    ))}
-                </select>
+        <div className="container-fluid mt-5">
+            <div className="row justify-content-between">
+                <div className="col-auto">
+                    <h2>Income & Expenses</h2>
+                </div>
+                <div className="col-auto">
+                    <select
+                        className="form-select"
+                        value={selectedMonth}
+                        onChange={handleMonthChange}
+                    >
+                        <option value="">Select Month</option>
+                        {[...Array(12)].map((_, i) => (
+                            <option key={i + 1} value={i + 1}>
+                                {new Date(0, i).toLocaleString("en", { month: "long" })}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
-
-            <table className="table table-bordered">
+            <table className="table table-hover mt-4">
                 <thead>
+                    <tr>
+                        <th colSpan="4" className="text-center">Income</th>
+                        <th colSpan="4" className="text-center">Expenses</th>
+                    </tr>
                     <tr>
                         <th>Date</th>
                         <th>Description</th>
@@ -275,22 +279,22 @@ function IncomeAndOutgoingTable() {
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {rows}
-                    <tr className={totalRowClass}>
-                        <td colSpan="2" className="text-center">Total Income:</td>
+                <tbody>{rows}</tbody>
+                <tfoot>
+                    <tr className="table-info">
+                        <td colSpan="2">Total Income</td>
                         <td>{totalIncome.toFixed(2)}</td>
                         <td></td>
-                        <td colSpan="2" className="text-center">Total Expenses:</td>
+                        <td colSpan="2">Total Expenses</td>
                         <td>{totalExpenses.toFixed(2)}</td>
                         <td></td>
                     </tr>
                     <tr className={totalRowClass}>
-                        <td colSpan="6" className="text-right">Net Balance:</td>
+                        <td colSpan="2">Net Balance</td>
                         <td>{netBalance.toFixed(2)}</td>
-                        <td colSpan="4"></td>
+                        <td colSpan="5"></td>
                     </tr>
-                </tbody>
+                </tfoot>
             </table>
         </div>
     );
