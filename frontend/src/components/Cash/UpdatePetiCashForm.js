@@ -20,9 +20,13 @@ function UpdatePetiCashForm() {
     useEffect(() => {
         // Fetch existing record data based on the id
         axios.get(`http://localhost:8070/cash/${id}`).then((response) => {
-            const { amount, date, description } = response.data;
+            const { amount, date, description } = response.data.cash;
+
+            // Format the date to 'yyyy-MM-dd' before setting it
+            const formattedDate = date ? new Date(date).toISOString().slice(0, 10) : "";
+
             setAmount(amount);
-            setDate(date);
+            setDate(formattedDate);
             setDescription(description);
         }).catch((error) => {
             console.error(error);
@@ -48,14 +52,14 @@ function UpdatePetiCashForm() {
                 description: trimmedDescription,
             });
             // Navigate to Peti Cash table after successful update
-            navigate("/petiCashTable");
+            navigate("/cashTable");
         } catch (error) {
             console.error(error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/petiCashTable");
+        navigate("/cashTable");
     };
 
     const handleAmountChange = (e) => {

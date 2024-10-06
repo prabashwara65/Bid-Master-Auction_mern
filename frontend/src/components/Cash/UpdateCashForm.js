@@ -32,11 +32,17 @@ function UpdateCashForm() {
     useEffect(() => {
         // Fetch existing record data based on the id
         axios.get(`http://localhost:8070/cash/${id}`).then((response) => {
-            const { amount, cashType, date, description } = response.data;
+            const { amount, cashType, date, description } = response.data.cash;
+
+            // Format the date to 'yyyy-MM-dd' before setting it
+            const formattedDate = date ? new Date(date).toISOString().slice(0, 10) : "";
+
             setAmount(amount);
             setCashType(cashType);
-            setDate(date);
+            setDate(formattedDate);
             setDescription(description);
+
+            console.log(amount, cashType, date, description)
         }).catch((error) => {
             console.error(error);
         });
