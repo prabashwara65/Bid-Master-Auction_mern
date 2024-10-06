@@ -1,21 +1,37 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function PetiCashForm() {
+function UpdatePetiCashForm() {
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
     const [description, setDescription] = useState("");
     const [error, setError] = useState("");
+    const { id } = useParams();
     const navigate = useNavigate();
 
-    // Valid description options for Peti Cash
     const validPetiCashDescriptions = [
         "Office Supplies",
         "Employee Reimbursements",
         "Miscellaneous Expenses",
     ];
+
+    useEffect(() => {
+        // Fetch existing record data based on the id
+        axios.get(`http://localhost:8070/cash/${id}`).then((response) => {
+            const { amount, date, description } = response.data.cash;
+
+            // Format the date to 'yyyy-MM-dd' before setting it
+            const formattedDate = date ? new Date(date).toISOString().slice(0, 10) : "";
+
+            setAmount(amount);
+            setDate(formattedDate);
+            setDescription(description);
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, [id]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,27 +44,26 @@ function PetiCashForm() {
         const trimmedDescription = description.trim();
 
         try {
-            // Sending post request for Peti Cash
-            await axios.post("http://localhost:8070/cash/", {
+            // Sending put request to update Peti Cash
+            await axios.put(`http://localhost:8070/cash/${id}`, {
                 amount: parseFloat(amount),
                 cashType: "Peti Cash",
                 date,
                 description: trimmedDescription,
             });
-            // Navigate to Peti Cash table after successful submission
-            navigate("/petiCashTable");
+            // Navigate to Peti Cash table after successful update
+            navigate("/cashTable");
         } catch (error) {
             console.error(error);
         }
     };
 
     const handleCancel = () => {
-        navigate("/petiCashTable");
+        navigate("/cashTable");
     };
 
     const handleAmountChange = (e) => {
-        // Allow only numbers and decimal point
-        const value = e.target.value.replace(/[^0-9.]/g, ''); 
+        const value = e.target.value.replace(/[^0-9.]/g, '');
         setAmount(value);
     };
 
@@ -76,7 +91,7 @@ function PetiCashForm() {
             <div className="col-lg-6">
                 <div className="card shadow border-0 rounded">
                     <div className="card-header text-center bg-warning text-white">
-                        <h2 className="mb-0">Add Peti Cash</h2>
+                        <h2 className="mb-0">Update Peti Cash</h2>
                     </div>
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
@@ -119,7 +134,7 @@ function PetiCashForm() {
 
                             <div className="d-flex justify-content-end">
                                 <button type="submit" className="btn btn-warning me-2">
-                                    <i className="fas fa-plus-circle me-2"></i>Add Peti Cash
+                                    <i className="fas fa-save me-2"></i>Update Peti Cash
                                 </button>
                                 <button type="button" onClick={handleCancel} className="btn btn-secondary">
                                     Cancel
@@ -133,4 +148,4 @@ function PetiCashForm() {
     );
 }
 
-export default PetiCashForm;
+export default UpdatePetiCashForm;

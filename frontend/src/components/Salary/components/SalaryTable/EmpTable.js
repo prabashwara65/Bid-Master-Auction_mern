@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { jsPDF } from 'jspdf'; // Import jsPDF
+import { jsPDF } from 'jspdf'; 
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import '@fortawesome/fontawesome-free/css/all.min.css'; 
-// import Nav from '../../Nav';
 
-const URL = "http://localhost:8070/employee"; // Employee API URL
+// Employee API URL
+const URL = "http://localhost:8070/employee"; 
 
 const SalaryRow = ({ employee, salary, onDeleteSalary, onGenerateReport }) => {
   return (
@@ -124,8 +124,8 @@ function SalaryTable() {
 
   return (
     <>
-      {/* <Nav /> */}
       <div className="container mt-2">
+        
         {/* <h1>Salary Table</h1> */}
         <input
           type="text"

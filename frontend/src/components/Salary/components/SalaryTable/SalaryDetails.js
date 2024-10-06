@@ -16,16 +16,16 @@ const DetailCard = ({ title, value }) => {
 
 // Main App component
 const App = () => {
-  const [employees, setEmployees] = useState([]); // State for user list
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState(''); // State for selected employee ID
-  const [employeeDetails, setEmployeeDetails] = useState({}); // State for selected employee's details
+  const [employees, setEmployees] = useState([]); 
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState(''); 
+  const [employeeDetails, setEmployeeDetails] = useState({}); 
 
   // Fetch employee list from API
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const response = await axios.get("http://localhost:8070/employee");
-        setEmployees(response.data.employees); // Assume the response contains an array of employees
+        setEmployees(response.data.employees); 
       } catch (error) {
         console.error('Error fetching employees:', error);
       }
@@ -39,12 +39,13 @@ const App = () => {
       if (selectedEmployeeId) {
         try {
           const response = await axios.get(`http://localhost:8070/salaries/get/${selectedEmployeeId}`);
-          setEmployeeDetails(response.data.salary); // Assume the response contains user details
+          setEmployeeDetails(response.data.salary); 
         } catch (error) {
           console.error('Error fetching employee details:', error);
         }
       } else {
-        setEmployeeDetails({}); // Reset details if no employee is selected
+        // Reset details if no employee is selected
+        setEmployeeDetails({}); 
       }
     };
     fetchEmployeeDetails();
@@ -56,7 +57,7 @@ const App = () => {
         <select onChange={(e) => setSelectedEmployeeId(e.target.value)} className="form-select mb-3">
           <option value="">Select Employee</option>
           {employees.map((employee) => (
-            <option key={employee._id} value={employee._id}>{employee.fullName}</option> // Assuming each employee has an _id and fullName
+            <option key={employee._id} value={employee._id}>{employee.fullName}</option> 
           ))}
         </select>
       </div>

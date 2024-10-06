@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const URL = "http://localhost:8070/employee"; // Employee API URL
+// Employee API URL
+const URL = "http://localhost:8070/employee"; 
 
 function EmployeeRoleCategorizer() {
   const [employees, setEmployees] = useState([]);

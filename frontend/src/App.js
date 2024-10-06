@@ -56,7 +56,8 @@ import Nav from "./components/Nav";
 
 import CashTable from "./components/Cash/CashTable";
 import CashForm from "./components/Cash/CashForm";
-import UpdateCash from "./components/Cash/UpdateCash";
+import UpdateCashForm from "./components/Cash/UpdateCashForm";
+import UpdatePetiCashForm from "./components/Cash/UpdatePetiCashForm";
 
 import AddSalary from "./components/Salary/AddSalary";
 import SalaryTable from "./components/Salary/SalaryTable";
@@ -163,7 +164,8 @@ function App() {
 
                     <Route path="/cashTable" element={<CashTable />} />
                     <Route path="/cashForm" element={<CashForm />} />
-                    <Route path="/updateCash/:id" element={<UpdateCash />} />
+                    <Route path="/UpdateCashForm/:id" element={<UpdateCashForm />} />
+                    <Route path="/UpdatePetiCashForm/:id" element={<UpdatePetiCashForm />} />
 
                     <Route path="/addSalary/:id" element={<AddSalary />} />
                     <Route path="/salaryTable" element={<SalaryTable />} />

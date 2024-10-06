@@ -11,9 +11,10 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 
-const URL = "http://localhost:8070/employee"; // Employee API URL
+// Employee API URL
+const URL = "http://localhost:8070/employee"; 
 
 const StackedChart = () => {
   const [data, setData] = useState([]);
@@ -25,7 +26,8 @@ const StackedChart = () => {
         const employees = response.data.employees;
 
         // Take the last 8 members without sorting
-        const lastEmployees = employees.slice(-8); // Get the last 8 members
+        // Get the last 8 members
+        const lastEmployees = employees.slice(-8); 
 
         // Fetch salary data for the last 8 employees
         const salaryData = await Promise.all(
@@ -66,7 +68,7 @@ const StackedChart = () => {
     <div className="container mt-1">
       <h3 className="text-center mb-4">User Salary and OT Analysis</h3>
       <div className="chart-wrapper">
-        <ResponsiveContainer width="100%" height={220}> {/* Reduced height */}
+        <ResponsiveContainer width="100%" height={220}> 
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
