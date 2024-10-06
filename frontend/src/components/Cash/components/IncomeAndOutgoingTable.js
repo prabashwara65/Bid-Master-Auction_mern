@@ -290,9 +290,9 @@ function IncomeAndOutgoingTable() {
                         <td></td>
                     </tr>
                     <tr className={totalRowClass}>
-                        <td colSpan="2">Net Balance</td>
+                        <td colSpan="6">Net Balance</td>
                         <td>{netBalance.toFixed(2)}</td>
-                        <td colSpan="5"></td>
+                        <td colSpan="6"></td>
                     </tr>
                 </tfoot>
             </table>
